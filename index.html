@@ -166,6 +166,23 @@ body{font-family:'Inter',system-ui,sans-serif;background:#fff;color:#1C1C1C;over
 .pc-save{font-size:10px;color:var(--gold-dk);font-weight:500;margin-left:auto}
 
 /* editorial */
+/* designer boutique */
+.db-sec{background:var(--cream);padding:64px 40px}
+.db-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+@media(max-width:880px){.db-grid{grid-template-columns:1fr;gap:32px}}
+.db-img-wrap{aspect-ratio:4/3;width:100%;max-width:100%;overflow:hidden;border-radius:16px;box-shadow:0 24px 60px rgba(28,28,28,.18);outline:1px solid var(--gold-md);outline-offset:-1px}
+.db-img-wrap img{width:100%;height:100%;object-fit:cover;display:block}
+.db-ey{font-size:9px;letter-spacing:.2em;color:var(--gold);font-weight:500;margin-bottom:12px}
+.db-h2{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,4vw,46px);font-weight:600;color:var(--charcoal);line-height:1.08;margin-bottom:18px}
+.db-p{font-size:15px;font-weight:300;color:var(--muted);line-height:1.75;max-width:440px;margin-bottom:26px}
+.db-list{list-style:none;display:flex;flex-direction:column;gap:13px;margin-bottom:34px}
+.db-list li{display:flex;align-items:center;gap:12px;font-size:14px;color:var(--charcoal)}
+.db-list svg{width:16px;height:16px;stroke:var(--gold);stroke-width:2;fill:none;flex-shrink:0}
+.db-cta{display:flex;gap:12px;flex-wrap:wrap}
+.db-b1{background:var(--charcoal);color:#fff;font-size:10px;letter-spacing:.18em;padding:15px 34px;transition:all .3s;cursor:pointer;border:none;font-family:inherit}
+.db-b1:hover{background:var(--gold);color:var(--charcoal)}
+.db-b2{border:1px solid rgba(28,28,28,.2);color:var(--charcoal);font-size:10px;letter-spacing:.18em;padding:15px 30px;background:none;transition:all .3s;cursor:pointer;font-family:inherit}
+.db-b2:hover{border-color:var(--gold);color:var(--gold-dk)}
 .ed-sec{background:#fff;padding:64px 40px}
 .ed-grid{display:grid;grid-template-columns:7fr 5fr;gap:24px}
 @media(max-width:900px){.ed-grid{grid-template-columns:1fr}}
@@ -379,7 +396,7 @@ footer{background:var(--charcoal);color:rgba(255,255,255,.4);padding:52px 40px 2
 .anim.up{transform:translateY(26px)}.anim.left{transform:translateX(-26px)}.anim.right{transform:translateX(26px)}
 .anim.visible{opacity:1;transform:none}
 
-@media(max-width:640px){.ps-in{grid-template-columns:repeat(2,1fr)}.ps-i{padding:10px 12px;border:none;border-bottom:1px solid rgba(255,255,255,.06)}.ft-grid{grid-template-columns:1fr 1fr}.cat-grid{grid-template-columns:1fr}.prod-grid{grid-template-columns:repeat(2,1fr)}.nb-main{padding:12px 16px}.cat-sec,.prod-sec,.ed-sec{padding:40px 16px}.hero-inner{padding:40px 20px}.ps{padding:12px 16px}.stats-in{padding:0 20px}.cp-bc,.cp-hero,.cp-filters,.cp-grid-wrap{padding-left:16px;padding-right:16px}.cp-hero{padding-top:32px;padding-bottom:32px}}
+@media(max-width:640px){.ps-in{grid-template-columns:repeat(2,1fr)}.ps-i{padding:10px 12px;border:none;border-bottom:1px solid rgba(255,255,255,.06)}.ft-grid{grid-template-columns:1fr 1fr}.cat-grid{grid-template-columns:1fr}.prod-grid{grid-template-columns:repeat(2,1fr)}.nb-main{padding:12px 16px}.cat-sec,.prod-sec,.ed-sec,.db-sec{padding:40px 16px}.hero-inner{padding:40px 20px}.ps{padding:12px 16px}.stats-in{padding:0 20px}.cp-bc,.cp-hero,.cp-filters,.cp-grid-wrap{padding-left:16px;padding-right:16px}.cp-hero{padding-top:32px;padding-bottom:32px}}
 </style>
 </head>
 <body>
@@ -486,6 +503,27 @@ footer{background:var(--charcoal);color:rgba(255,255,255,.4);padding:52px 40px 2
     <div class="pc anim up" style="transition-delay:210ms" onclick="openProduct('clothes','Tailored Linen Blazer','OUTERWEAR','./clothes2.webp',420,700,'FAST SELLING','bdg-b')"><div class="pc-img"><img src="./clothes2.webp" alt="Tailored Linen Blazer" style="width:100%;height:100%;object-fit:cover"/><span class="pc-bdg bdg-b track-w">FAST SELLING</span><span class="pc-disc track-w">-40%</span><div class="pc-add track-lux">ADD TO BAG</div></div><div class="pc-cat track-lux">OUTERWEAR</div><div class="pc-name">Tailored Linen Blazer</div><div><span class="pc-stars">★★★★★</span><span class="pc-revs">(89)</span></div><div class="pc-pr"><span class="pc-price">$420</span><span class="pc-orig">$700</span><span class="pc-save">Save $280</span></div></div>
     <div class="pc anim up" style="transition-delay:280ms" onclick="openProduct('accessories','Silk Twill Carré','SCARVES','./accessoire2.webp',195,320,'FAST SELLING','bdg-b')"><div class="pc-img"><img src="./accessoire2.webp" alt="Silk Twill Carré" style="width:100%;height:100%;object-fit:cover"/><span class="pc-bdg bdg-b track-w">FAST SELLING</span><span class="pc-disc track-w">-39%</span><div class="pc-add track-lux">ADD TO BAG</div></div><div class="pc-cat track-lux">SCARVES</div><div class="pc-name">Silk Twill Carré</div><div><span class="pc-stars">★★★★★</span><span class="pc-revs">(302)</span></div><div class="pc-pr"><span class="pc-price">$195</span><span class="pc-orig">$320</span><span class="pc-save">Save $125</span></div></div>
     <div class="pc anim up" style="transition-delay:350ms" onclick="openProduct('shoes','Suede Block-Heel Mules','SHOES','./shoes2.webp',295,490,'EXCLUSIVE DROP','bdg-e')"><div class="pc-img"><img src="./shoes2.webp" alt="Suede Block-Heel Mules" style="width:100%;height:100%;object-fit:cover"/><span class="pc-bdg bdg-e track-w">EXCLUSIVE</span><span class="pc-disc track-w">-40%</span><div class="pc-add track-lux">ADD TO BAG</div></div><div class="pc-cat track-lux">SHOES</div><div class="pc-name">Suede Block-Heel Mules</div><div><span class="pc-stars">★★★★★</span><span class="pc-revs">(256)</span></div><div class="pc-pr"><span class="pc-price">$295</span><span class="pc-orig">$490</span><span class="pc-save">Save $195</span></div></div>
+  </div>
+</div></div>
+
+<!-- DESIGNER BOUTIQUE -->
+<div class="db-sec"><div class="sec-in">
+  <div class="db-grid">
+    <div class="anim left"><div class="db-img-wrap"><img src="./marketplace.webp" alt="Chmicha Designer Boutique - Luxury Marketplace" loading="lazy"/></div></div>
+    <div class="anim right" style="transition-delay:120ms">
+      <p class="db-ey track-lux">THE DESIGNER BOUTIQUE</p>
+      <h2 class="db-h2">Where independent<br/>ateliers find you.</h2>
+      <p class="db-p">A curated home for the world's most exciting independent designers and boutique houses. Discover rare, limited-run pieces you won't find anywhere else — each one vetted by the CHMICHA atelier team.</p>
+      <ul class="db-list">
+        <li><svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Vetted independent ateliers</li>
+        <li><svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Authenticity guaranteed on every piece</li>
+        <li><svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Limited-run &amp; one-of-a-kind designs</li>
+      </ul>
+      <div class="db-cta">
+        <button class="db-b1 track-lux">EXPLORE THE BOUTIQUE</button>
+        <button class="db-b2 track-lux">BECOME A SELLER</button>
+      </div>
+    </div>
   </div>
 </div></div>
 
