@@ -298,7 +298,14 @@ img,video,svg{max-width:100%;height:auto}
 .pd-img{position:relative}
 .pd-img img{width:100%;height:100%;object-fit:cover;display:block}
 .pd-bdg{position:absolute;top:14px;left:14px;font-size:9px;font-family:'Inter',sans-serif;font-weight:500;letter-spacing:.1em;padding:4px 9px}
-.pd-close{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.85);border:none;cursor:pointer;padding:8px}
+.pd-crumb{grid-column:1/-1;position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:12px;background:rgba(255,255,255,.9);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--gold-lt);padding:11px 48px 11px 22px}
+.pd-back{display:flex;align-items:center;gap:8px;background:none;border:none;cursor:pointer;font-family:inherit;font-size:10px;letter-spacing:.18em;color:var(--charcoal);transition:color .2s}
+.pd-back:hover{color:var(--gold-dk)}.pd-back svg{width:13px;height:13px;stroke:currentColor;stroke-width:1.8;fill:none;transition:transform .3s}.pd-back:hover svg{transform:translateX(-3px)}
+.pd-trail{display:flex;align-items:center;gap:6px;overflow-x:auto;scrollbar-width:none;font-size:9px;letter-spacing:.08em;color:var(--muted);white-space:nowrap}
+.pd-trail::-webkit-scrollbar{display:none}
+.pd-trail button{background:none;border:none;cursor:pointer;font-family:inherit;font-size:9px;letter-spacing:.08em;color:var(--muted);transition:color .2s}
+.pd-trail button:hover{color:var(--gold-dk)}.pd-trail .sep{color:var(--gold-md)}.pd-trail .cur{color:var(--charcoal);font-weight:500;max-width:120px;overflow:hidden;text-overflow:ellipsis}
+.pd-close{position:absolute;top:9px;right:12px;z-index:8;background:none;border:none;cursor:pointer;padding:8px}
 .pd-close svg{width:18px;height:18px;stroke:var(--charcoal);stroke-width:1.5;fill:none}
 .pd-info{padding:36px 32px;display:flex;flex-direction:column;justify-content:center}
 .pd-ey{font-size:9px;letter-spacing:.18em;color:var(--gold);font-weight:500;margin-bottom:10px}
@@ -401,7 +408,58 @@ footer{background:var(--charcoal);color:rgba(255,255,255,.4);padding:52px 40px 2
 .anim.up{transform:translateY(26px)}.anim.left{transform:translateX(-26px)}.anim.right{transform:translateX(26px)}
 .anim.visible{opacity:1;transform:none}
 
-@media(max-width:640px){.ps-in{grid-template-columns:repeat(2,1fr)}.ps-i{padding:10px 12px;border:none;border-bottom:1px solid rgba(255,255,255,.06)}.ft-grid{grid-template-columns:1fr 1fr}.cat-grid{grid-template-columns:1fr}.prod-grid{grid-template-columns:repeat(2,1fr)}.nb-main{padding:12px 16px;gap:10px}.nb-icon span{display:none}.nb-icons{gap:14px}.search-b select{display:none}.logo-n{font-size:20px}.cat-sec,.prod-sec,.ed-sec,.db-sec{padding:40px 16px}.hero-inner{padding:40px 20px}.ps{padding:12px 16px}.stats-in{padding:0 20px}.cp-bc,.cp-hero,.cp-filters,.cp-grid-wrap{padding-left:16px;padding-right:16px}.cp-hero{padding-top:32px;padding-bottom:32px}}
+@media(max-width:640px){
+  /* layout / columns */
+  .ps-in{grid-template-columns:repeat(2,1fr)}
+  .ps-i{padding:10px 12px;border:none;border-bottom:1px solid rgba(255,255,255,.06)}
+  .ft-grid{grid-template-columns:1fr 1fr;gap:28px}
+  .cat-grid{grid-template-columns:1fr;gap:24px}
+  .prod-grid{grid-template-columns:repeat(2,1fr);gap:16px 14px}
+  /* navbar */
+  .nb-main{padding:12px 16px;gap:10px}.nb-icon span{display:none}.nb-icons{gap:14px}.search-b select{display:none}.logo-n{font-size:20px}
+
+  /* ── consistent vertical rhythm: generous, even section spacing ── */
+  .cat-sec,.prod-sec,.ed-sec,.db-sec{padding:48px 20px}
+  .hero-inner{padding:40px 22px}
+  .ps{padding:14px 18px}
+  .stats-in{padding:0 16px}
+  .cp-bc,.cp-hero,.cp-filters,.cp-grid-wrap{padding-left:20px;padding-right:20px}
+  .cp-hero{padding-top:36px;padding-bottom:36px}
+
+  /* ── typography hierarchy: smaller, legible, elegant ── */
+  .sec-t{font-size:26px}
+  .sec-hd{margin-bottom:28px}
+  .hero h1{font-size:38px;line-height:1.08}
+  .hero p{font-size:14px;line-height:1.7}
+
+  /* ── Designer Boutique — premium white space ── */
+  .db-sec{padding:52px 20px}
+  .db-grid{gap:28px}
+  .db-h2{font-size:30px;margin-bottom:14px}
+  .db-p{font-size:14px;line-height:1.7;margin-bottom:22px}
+  .db-list{gap:12px;margin-bottom:28px}
+  .db-list li{font-size:13px}
+  .db-b1,.db-b2{padding:14px 24px;flex:1;text-align:center}
+  .db-cta{gap:10px}
+
+  /* ── Editorial — looser stacking, smaller heads ── */
+  .ed-grid{gap:28px}
+  .ed-title{font-size:24px}
+  .ed-sm{gap:14px}
+  .ed-sm-img{width:120px}
+  .ed-sm-t{font-size:17px}
+  .ed-qt{padding:32px 22px;margin-top:36px}
+  .ed-q-t{font-size:18px}
+  .nl-in{width:100%}
+  .nl-r{gap:10px}
+
+  /* ── Featured product cards — tighter, legible ── */
+  .pc-name{font-size:12px}
+  .pc-price{font-size:13px}
+
+  /* body copy default a touch smaller */
+  body{font-size:14px}
+}
 </style>
 </head>
 <body>
@@ -648,10 +706,19 @@ footer{background:var(--charcoal);color:rgba(255,255,255,.4);padding:52px 40px 2
 <div id="pd-modal">
   <div class="pd-bd" onclick="closePD()"></div>
   <div class="pd-panel">
+    <!-- Sticky breadcrumb / back -->
+    <div class="pd-crumb">
+      <button class="pd-back track-lux" onclick="closePD()" aria-label="Go back to previous page"><svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>BACK</button>
+      <nav class="pd-trail" aria-label="Breadcrumb">
+        <button onclick="pdGoHome()">Home</button><span class="sep">›</span>
+        <button onclick="closePD()" id="pd-crumb-cat">Category</button><span class="sep">›</span>
+        <span class="cur" id="pd-crumb-name">Product</span>
+      </nav>
+    </div>
+    <button class="pd-close" onclick="closePD()" aria-label="Close product view"><svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
     <div class="pd-img" id="pd-img-wrap">
       <img id="pd-img" src="" alt="" style="min-height:400px"/>
       <span id="pd-bdg" class="pd-bdg bdg-e track-w"></span>
-      <button class="pd-close" onclick="closePD()"><svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
     </div>
     <div class="pd-info">
       <p class="pd-ey track-lux">CHMICHA · EXCLUSIVE</p>
@@ -720,8 +787,13 @@ const SIZES={clothes:['XS','S','M','L','XL'],accessories:['One Size'],shoes:['36
 function openProduct(cat,name,catLabel,img,price,orig,tag,badgeCls){
   pdQtyVal=1;document.getElementById('pd-qty').textContent=1;
   document.getElementById('pd-img').src=img;
+  document.getElementById('pd-img').alt=name;
   document.getElementById('pd-name').textContent=name;
   document.getElementById('pd-sub').textContent=catLabel;
+  // breadcrumb: Home › Category › Product
+  const catTitles={clothes:'Clothes',accessories:'Accessories',shoes:'Shoes'};
+  document.getElementById('pd-crumb-cat').textContent=catTitles[cat]||catLabel;
+  document.getElementById('pd-crumb-name').textContent=name;
   document.getElementById('pd-bdg').textContent=tag;
   document.getElementById('pd-bdg').className='pd-bdg '+badgeCls+' track-w';
   document.getElementById('pd-price').textContent='$'+price;
@@ -742,6 +814,7 @@ function openProduct(cat,name,catLabel,img,price,orig,tag,badgeCls){
   document.body.style.overflow='hidden';
 }
 function closePD(){document.getElementById('pd-modal').classList.remove('open');document.body.style.overflow='';}
+function pdGoHome(){closePD();showPage('home');}
 function pdQty(d){pdQtyVal=Math.max(1,pdQtyVal+d);document.getElementById('pd-qty').textContent=pdQtyVal;}
 
 /* SIZE BUTTONS in category page */
