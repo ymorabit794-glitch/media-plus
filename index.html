@@ -1,16 +1,721 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Chmicha — Fashion &amp; More</title>
-    <meta name="description" content="Shop Clothes, Accessories, and Shoes at unbeatable prices on Chmicha." />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  </head>
-  <body class="bg-gray-50">
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Chmicha — Luxe Fashion</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;background:#fff;color:#1C1C1C;overflow-x:hidden}
+:root{--gold:#D4AF37;--gold-lt:#FAF5E1;--gold-md:#E8CC6E;--gold-dk:#9A7A10;--charcoal:#1C1C1C;--muted:#6B6B6B;--cream:#FAF9F6;--border:#F0EBD8}
+.display{font-family:'Cormorant Garamond',Georgia,serif}
+.track-lux{letter-spacing:.18em}.track-w{letter-spacing:.1em}
+
+/* announce */
+#announce{background:var(--charcoal);color:#fff;text-align:center;padding:9px 16px;font-size:11px;letter-spacing:.14em;overflow:hidden;transition:max-height .5s,padding .5s,opacity .5s;max-height:36px}
+#announce.hidden{max-height:0;padding:0;opacity:0}
+#announce span{color:var(--gold-md);font-weight:500}
+
+/* navbar */
+#navbar{position:sticky;top:0;z-index:50;transition:all .5s}
+#navbar.glass{background:rgba(255,255,255,.82);backdrop-filter:blur(18px) saturate(180%);-webkit-backdrop-filter:blur(18px) saturate(180%);box-shadow:0 2px 32px rgba(0,0,0,.07);border-bottom:1px solid rgba(212,175,55,.2)}
+#navbar.solid{background:#fff;border-bottom:1px solid var(--border)}
+.nb-main{padding:14px 40px;display:flex;align-items:center;gap:20px;transition:padding .3s}
+#navbar.glass .nb-main{padding:10px 40px}
+.logo-w{display:flex;flex-direction:column;align-items:center;line-height:1;text-decoration:none;flex-shrink:0}
+.logo-n{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:var(--charcoal);letter-spacing:.12em;transition:font-size .3s}
+#navbar.glass .logo-n{font-size:22px}
+.logo-s{font-size:9px;letter-spacing:.2em;color:var(--gold);font-weight:500;margin-top:2px}
+.search-b{flex:1;max-width:540px;margin:0 auto;display:flex;border:1px solid rgba(28,28,28,.18);transition:border-color .25s}
+.search-b:focus-within{border-color:var(--gold)}
+.search-b select,.search-b input{border:none;outline:none;font-family:'Inter',sans-serif}
+.search-b select{background:var(--cream);padding:10px 12px;font-size:12px;font-weight:500;cursor:pointer;border-right:1px solid rgba(28,28,28,.1);color:var(--charcoal)}
+.search-b input{flex:1;padding:10px 16px;font-size:13px;color:var(--charcoal);background:rgba(255,255,255,.9)}
+.search-b input::placeholder{color:rgba(107,107,107,.45)}
+.search-b button{background:var(--charcoal);border:none;padding:10px 18px;cursor:pointer;color:#fff;font-size:16px;transition:background .2s}
+.search-b button:hover{background:var(--gold)}
+.nb-icons{display:flex;align-items:center;gap:18px;margin-left:auto}
+.nb-icon{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;background:none;border:none;font-family:inherit;text-decoration:none}
+.nb-icon svg{width:20px;height:20px;stroke:var(--charcoal);stroke-width:1.5;fill:none;transition:stroke .2s}
+.nb-icon span{font-size:9px;letter-spacing:.12em;color:var(--muted);transition:color .2s}
+.nb-icon:hover svg{stroke:var(--gold)}.nb-icon:hover span{color:var(--gold)}
+.cart-rel{position:relative}.cart-b{position:absolute;top:-4px;right:-8px;background:var(--gold);color:#fff;font-size:9px;font-weight:600;border-radius:50%;width:14px;height:14px;display:flex;align-items:center;justify-content:center}
+.nb-nav{border-top:1px solid var(--border);overflow-x:auto;scrollbar-width:none}
+.nb-nav::-webkit-scrollbar{display:none}
+.nb-nav ul{display:flex;justify-content:center;list-style:none;padding:0 16px;white-space:nowrap}
+.nb-nav a{display:block;padding:10px 14px;font-size:10px;letter-spacing:.16em;color:var(--muted);text-decoration:none;border-bottom:2px solid transparent;transition:all .2s}
+.nb-nav a:hover{color:var(--charcoal);border-bottom-color:var(--gold)}
+.nb-nav a.active{color:var(--charcoal);border-bottom-color:var(--gold)}
+
+/* pages */
+.page{display:none}.page.active{display:block}
+
+/* HERO */
+.hero{position:relative;overflow:hidden;background:var(--charcoal);min-height:85vh;display:flex;flex-direction:column}
+.hero-poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.38) saturate(.6)}
+.hero-s1{position:absolute;inset:0;background:linear-gradient(to right,rgba(28,28,28,.7),rgba(28,28,28,.3),transparent);pointer-events:none}
+.hero-s2{position:absolute;inset:0;background:linear-gradient(to top,rgba(28,28,28,.6),transparent 60%);pointer-events:none}
+.hero-inner{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:60px 40px;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;flex:1}
+@media(max-width:860px){.hero-inner{grid-template-columns:1fr;gap:32px}.nb-main{padding:12px 20px}.hero{min-height:auto}}
+.hero-ey{font-size:10px;letter-spacing:.2em;color:var(--gold-md);font-weight:500;margin-bottom:18px;display:flex;align-items:center;gap:12px}
+.hero-ey::before{content:'';display:block;width:28px;height:1px;background:var(--gold)}
+.hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(40px,5.5vw,70px);font-weight:600;color:#fff;line-height:1.04;margin-bottom:16px}
+.hero h1 em{color:var(--gold-md);font-style:italic}
+.hero p{color:rgba(255,255,255,.6);font-size:15px;font-weight:300;line-height:1.75;margin-bottom:30px;max-width:400px}
+.cta-row{display:flex;gap:12px;margin-bottom:36px;flex-wrap:wrap}
+.btn-gold{background:var(--gold);color:var(--charcoal);font-size:10px;letter-spacing:.18em;padding:14px 32px;text-decoration:none;font-family:inherit;transition:background .25s;display:inline-block;border:none;cursor:pointer}
+.btn-gold:hover{background:var(--gold-md)}
+.btn-gw{border:1px solid rgba(255,255,255,.3);color:#fff;font-size:10px;letter-spacing:.18em;padding:14px 28px;text-decoration:none;transition:all .25s;display:inline-block;cursor:pointer;background:none;font-family:inherit}
+.btn-gw:hover{border-color:var(--gold-md);color:var(--gold-md)}
+.trust-row{display:flex;gap:18px;padding-top:22px;border-top:1px solid rgba(255,255,255,.1);flex-wrap:wrap}
+.ti{display:flex;align-items:flex-start;gap:8px}
+.ti-r{width:1px;background:rgba(212,175,55,.5);align-self:stretch;margin-top:2px;flex-shrink:0}
+.ti-t{font-size:9px;letter-spacing:.12em;color:rgba(255,255,255,.8);font-weight:600}
+.ti-s{font-size:9px;color:rgba(255,255,255,.35);margin-top:1px}
+.sale-card{background:rgba(250,249,246,.08);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(212,175,55,.25);padding:30px;max-width:340px;width:100%;margin-left:auto}
+.dv-row{display:flex;align-items:center;gap:12px;margin-bottom:4px}
+.dv-line{flex:1;height:1px;background:rgba(212,175,55,.35)}
+.dv-txt{font-size:9px;letter-spacing:.18em;color:var(--gold-md);font-weight:500}
+.timer-w{display:flex;justify-content:center;gap:12px;padding:18px 0}
+.t-u{display:flex;flex-direction:column;align-items:center}
+.t-n{font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:600;color:#fff;line-height:1;font-variant-numeric:tabular-nums}
+.t-l{font-size:8px;letter-spacing:.2em;color:rgba(255,255,255,.4);margin-top:4px}
+.t-s{font-family:'Cormorant Garamond',serif;font-size:30px;color:var(--gold);line-height:1.1;font-weight:300;margin-top:4px}
+.cd{height:1px;background:rgba(212,175,55,.2);margin:18px 0}
+.stk-hd{font-size:9px;letter-spacing:.18em;color:rgba(255,255,255,.35);font-weight:500;margin-bottom:12px}
+.stk-r{margin-bottom:12px}
+.stk-hr{display:flex;justify-content:space-between;margin-bottom:5px}
+.stk-nm{font-size:11px;color:rgba(255,255,255,.8);font-weight:500}
+.stk-p{font-size:9px;letter-spacing:.1em;color:var(--gold-md);font-weight:500}
+.bar-t{height:1px;background:rgba(212,175,55,.2);position:relative}
+.bar-f{position:absolute;inset-y:0;left:0;background:var(--gold)}
+.promo-r2{display:flex;align-items:center;justify-content:space-between}
+.promo-l2{font-size:9px;letter-spacing:.14em;color:rgba(255,255,255,.35)}
+.promo-l2 strong{display:block;font-size:13px;color:rgba(255,255,255,.75);letter-spacing:.02em;margin-top:2px;font-weight:400}
+.promo-c2{border:1px solid rgba(212,175,55,.5);color:var(--gold-md);font-size:13px;font-weight:600;letter-spacing:.1em;padding:8px 14px}
+.stats-s{background:rgba(28,28,28,.55);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid rgba(255,255,255,.08)}
+.stats-in{max-width:1200px;margin:0 auto;padding:0 40px;display:grid;grid-template-columns:repeat(3,1fr)}
+.stat-i{padding:16px 20px;text-align:center;border-right:1px solid rgba(255,255,255,.08)}
+.stat-i:last-child{border:none}
+.stat-v{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;color:#fff}
+.stat-l{font-size:9px;letter-spacing:.16em;color:rgba(255,255,255,.35);margin-top:3px}
+
+/* promo strip */
+.ps{background:var(--charcoal);padding:16px 40px}
+.ps-in{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
+.ps-i{display:flex;align-items:center;gap:10px;padding:0 18px;border-right:1px solid rgba(255,255,255,.07)}
+.ps-i:first-child{padding-left:0}.ps-i:last-child{border:none}
+.ps-ic{color:var(--gold);font-size:12px;flex-shrink:0}
+.ps-t{font-size:9px;letter-spacing:.12em;color:#fff;font-weight:500}
+.ps-s{font-size:9px;color:rgba(255,255,255,.28);margin-top:1px}
+
+/* CATEGORIES with real images */
+.cat-sec{background:#fff;padding:64px 40px}
+.sec-in{max-width:1200px;margin:0 auto}
+.sec-hd{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:36px}
+.sec-ey{font-size:9px;letter-spacing:.2em;color:var(--gold);font-weight:500;margin-bottom:8px}
+.sec-t{font-family:'Cormorant Garamond',serif;font-size:clamp(24px,3vw,36px);font-weight:600;color:var(--charcoal)}
+.va{font-size:9px;letter-spacing:.18em;color:var(--muted);text-decoration:none;border-bottom:1px solid rgba(107,107,107,.25);padding-bottom:2px;transition:all .2s;cursor:pointer;background:none;border-left:none;border-top:none;border-right:none;font-family:inherit}
+.va:hover{color:var(--gold);border-bottom-color:var(--gold)}
+.cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+@media(max-width:700px){.cat-grid{grid-template-columns:1fr}}
+.cat-card{cursor:pointer;display:block;text-decoration:none;background:none;border:none;text-align:left;font-family:inherit;width:100%}
+.cat-img-wrap{aspect-ratio:3/4;position:relative;overflow:hidden}
+.cat-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform .7s ease}
+.cat-card:hover .cat-img-wrap img{transform:scale(1.05)}
+.cat-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(28,28,28,.45),transparent);opacity:0;transition:opacity .5s}
+.cat-card:hover .cat-ov{opacity:1}
+.cat-cta-w{position:absolute;bottom:0;left:0;right:0;text-align:center;padding:18px;transform:translateY(100%);transition:transform .32s cubic-bezier(.22,1,.36,1)}
+.cat-card:hover .cat-cta-w{transform:translateY(0)}
+.cat-cta-b{background:#fff;color:var(--charcoal);font-size:9px;letter-spacing:.18em;padding:10px 22px;display:inline-block}
+.cat-lbl{padding:13px 0 3px}
+.cat-lt{display:flex;align-items:center;justify-content:space-between}
+.cat-n{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--charcoal)}
+.cat-sb{font-size:11px;color:var(--muted)}
+.cat-arr{width:15px;height:15px;stroke:var(--muted);stroke-width:1.5;fill:none;transition:all .2s}
+.cat-card:hover .cat-arr{stroke:var(--gold);transform:translateX(4px)}
+.cat-cnt{font-size:9px;letter-spacing:.18em;color:var(--gold);font-weight:500;margin-top:5px}
+.cat-rl{height:1px;background:var(--border);margin-top:10px;transition:background .3s}
+.cat-card:hover .cat-rl{background:var(--gold)}
+
+/* products section */
+.prod-sec{background:var(--cream);padding:64px 40px}
+.prod-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:16px}
+@media(max-width:1000px){.prod-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:540px){.prod-grid{grid-template-columns:repeat(2,1fr)}}
+.pc{cursor:pointer}
+.pc-img{aspect-ratio:3/4;position:relative;overflow:hidden;margin-bottom:10px}
+.pc-img img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
+.pc:hover .pc-img img{transform:scale(1.05)}
+.pc-bdg{position:absolute;top:8px;left:8px;font-size:8px;letter-spacing:.1em;font-weight:500;padding:3px 7px}
+.bdg-e{background:var(--charcoal);color:#fff}
+.bdg-b{background:var(--gold);color:#fff}
+.bdg-r{background:#7f1d1d;color:#fff}
+.pc-disc{position:absolute;top:8px;right:8px;font-size:8px;letter-spacing:.1em;color:var(--muted);background:rgba(255,255,255,.88);padding:3px 7px}
+.pc-add{position:absolute;bottom:0;left:0;right:0;background:var(--charcoal);color:#fff;font-size:8px;letter-spacing:.18em;text-align:center;padding:11px;transform:translateY(100%);transition:transform .3s cubic-bezier(.22,1,.36,1)}
+.pc:hover .pc-add{transform:translateY(0)}
+.pc-cat{font-size:9px;letter-spacing:.16em;color:var(--gold);font-weight:500;margin-bottom:3px}
+.pc-name{font-size:12px;font-weight:500;color:var(--charcoal);line-height:1.35;margin-bottom:4px;transition:color .2s}
+.pc:hover .pc-name{color:var(--gold-dk)}
+.pc-stars{font-size:10px;color:var(--gold)}
+.pc-revs{font-size:10px;color:var(--muted);margin-left:3px}
+.pc-pr{display:flex;align-items:baseline;gap:6px;margin-top:5px}
+.pc-price{font-size:13px;font-weight:600;color:var(--charcoal)}
+.pc-orig{font-size:11px;color:var(--muted);text-decoration:line-through}
+.pc-save{font-size:10px;color:var(--gold-dk);font-weight:500;margin-left:auto}
+
+/* editorial */
+.ed-sec{background:#fff;padding:64px 40px}
+.ed-grid{display:grid;grid-template-columns:7fr 5fr;gap:24px}
+@media(max-width:900px){.ed-grid{grid-template-columns:1fr}}
+.ed-lg{display:flex;flex-direction:column}
+.ed-lg-img{flex:1;min-height:380px;position:relative;overflow:hidden}
+.ed-lg-img::before{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(28,28,28,.25),transparent)}
+.ed-ph{background:linear-gradient(to bottom,#d0c8bc,#e8e4dc)}
+.ed-ph2{background:linear-gradient(to bottom,#e8d898,#f5eecc)}
+.ed-ph3{background:linear-gradient(to bottom,#f0ccd0,#f8e4e4)}
+.ed-tag-lbl{position:absolute;top:10px;left:10px;font-size:8px;letter-spacing:.14em;color:#fff;background:rgba(28,28,28,.65);padding:3px 8px}
+.ed-ey{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.ed-ey::before{content:'';display:block;width:20px;height:1px;background:var(--gold)}
+.ed-ey span{font-size:9px;letter-spacing:.18em;color:var(--gold);font-weight:500}
+.ed-title{font-family:'Cormorant Garamond',serif;font-size:clamp(22px,3vw,36px);font-weight:600;color:var(--charcoal);line-height:1.1;margin-bottom:10px;transition:color .2s}
+.ed-lg:hover .ed-title{color:var(--gold-dk)}
+.ed-sm-t{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:var(--charcoal);line-height:1.2;margin-bottom:7px;transition:color .2s}
+.ed-sm:hover .ed-sm-t{color:var(--gold-dk)}
+.ed-exc{font-size:13px;font-weight:300;color:var(--muted);line-height:1.7;margin-bottom:12px;max-width:440px}
+.ed-sm-exc{font-size:12px;font-weight:300;color:var(--muted);line-height:1.7;margin-bottom:10px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.ed-rd{display:inline-flex;align-items:center;gap:7px;font-size:9px;letter-spacing:.18em;color:var(--charcoal);text-decoration:none;border-bottom:1px solid rgba(28,28,28,.2);padding-bottom:2px;transition:all .2s;cursor:pointer}
+.ed-rd:hover{color:var(--gold-dk);border-bottom-color:var(--gold)}
+.ed-sp{display:flex;flex-direction:column;gap:20px}
+.ed-sm{display:flex;gap:14px;cursor:pointer}
+.ed-sm-img{width:150px;flex-shrink:0;position:relative;overflow:hidden;aspect-ratio:1}
+.ed-sm-img::before{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(28,28,28,.2),transparent)}
+.ed-dv{height:1px;background:var(--border)}
+.ed-qt{border:1px solid var(--border);background:var(--cream);padding:44px;text-align:center;position:relative;overflow:hidden;margin-top:44px}
+.ed-qt::before{content:'"';font-family:'Cormorant Garamond',serif;font-size:80px;color:var(--gold-md);opacity:.35;position:absolute;top:6px;left:18px;line-height:1}
+.ed-qt::after{content:'"';font-family:'Cormorant Garamond',serif;font-size:80px;color:var(--gold-md);opacity:.35;position:absolute;bottom:-12px;right:18px;line-height:1}
+.ed-q-t{font-family:'Cormorant Garamond',serif;font-size:clamp(17px,2.5vw,26px);font-weight:600;color:var(--charcoal);font-style:italic;line-height:1.5;max-width:520px;margin:0 auto 14px;position:relative;z-index:1}
+.ed-q-a{font-size:9px;letter-spacing:.2em;color:var(--gold);font-weight:500;margin-bottom:24px}
+.nl-r{display:flex;gap:0;justify-content:center;flex-wrap:wrap}
+.nl-in{border:1px solid rgba(28,28,28,.2);border-right:none;padding:11px 18px;font-size:13px;font-family:'Inter',sans-serif;color:var(--charcoal);outline:none;width:260px;background:#fff;transition:border-color .2s}
+.nl-in:focus{border-color:var(--gold)}
+.nl-btn{background:var(--charcoal);color:#fff;border:none;font-size:9px;letter-spacing:.18em;padding:11px 22px;cursor:pointer;font-family:inherit;transition:background .25s;white-space:nowrap}
+.nl-btn:hover{background:var(--gold);color:var(--charcoal)}
+.nl-note{font-size:9px;color:var(--muted);margin-top:9px}
+
+/* ── CATEGORY PAGE ── */
+.cp-bc{background:var(--cream);border-bottom:1px solid var(--border);padding:12px 40px}
+.cp-bc-in{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
+.cp-bc button{background:none;border:none;cursor:pointer;font-family:inherit;font-size:12px;color:var(--muted);transition:color .2s}
+.cp-bc button:hover{color:var(--gold)}
+.cp-bc span{color:var(--gold-md)}
+.cp-hero{background:#fff;border-bottom:1px solid var(--border);padding:48px 40px}
+.cp-hero-in{max-width:1200px;margin:0 auto}
+.cp-ey{font-size:9px;letter-spacing:.2em;color:var(--gold);font-weight:500;margin-bottom:10px}
+.cp-h1{font-family:'Cormorant Garamond',serif;font-size:clamp(34px,5vw,56px);font-weight:600;color:var(--charcoal);margin-bottom:12px}
+.cp-desc{font-size:14px;font-weight:300;color:var(--muted);line-height:1.75;max-width:520px}
+.cp-filters{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:11px 40px}
+.cp-fil-in{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+.fil-tags{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.fil-tags::-webkit-scrollbar{display:none}
+.fil-tag{flex-shrink:0;background:none;border:1px solid rgba(28,28,28,.15);font-size:9px;letter-spacing:.1em;font-family:'Inter',sans-serif;color:var(--muted);padding:6px 12px;cursor:pointer;transition:all .2s}
+.fil-tag:hover{border-color:var(--gold);color:var(--charcoal)}
+.sort-btn{background:none;border:none;font-size:9px;letter-spacing:.12em;font-family:'Inter',sans-serif;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:6px;transition:color .2s;flex-shrink:0;margin-left:16px}
+.sort-btn:hover{color:var(--charcoal)}
+.cp-grid-wrap{max-width:1200px;margin:0 auto;padding:48px 40px}
+.cp-grid{display:grid;gap:28px 24px}
+.cp-grid.two-col{grid-template-columns:repeat(2,1fr);max-width:800px}
+.cp-grid.three-col{grid-template-columns:repeat(3,1fr)}
+@media(max-width:700px){.cp-grid.two-col,.cp-grid.three-col{grid-template-columns:1fr}}
+.cpcard{cursor:pointer}
+.cpcard-img{aspect-ratio:3/4;position:relative;overflow:hidden;margin-bottom:16px}
+.cpcard-img img{width:100%;height:100%;object-fit:cover;transition:transform .7s ease}
+.cpcard:hover .cpcard-img img{transform:scale(1.04)}
+.cpcard-ov{position:absolute;inset:0;background:rgba(28,28,28,.08);opacity:0;transition:opacity .5s}
+.cpcard:hover .cpcard-ov{opacity:1}
+.cpcard-bdg{position:absolute;top:12px;left:12px;font-size:9px;font-family:'Inter',sans-serif;font-weight:500;letter-spacing:.1em;padding:4px 9px}
+.cpcard-disc{position:absolute;top:12px;right:12px;font-size:9px;font-family:'Inter',sans-serif;color:var(--muted);background:rgba(255,255,255,.88);padding:4px 9px;letter-spacing:.1em}
+.cpcard-sizes{position:absolute;bottom:0;left:0;right:0;background:rgba(255,255,255,.95);padding:12px 14px;transform:translateY(100%);transition:transform .3s cubic-bezier(.22,1,.36,1)}
+.cpcard:hover .cpcard-sizes{transform:translateY(0)}
+.cpcard-sizes-lbl{font-size:8px;letter-spacing:.18em;color:var(--muted);font-family:'Inter',sans-serif;margin-bottom:8px}
+.sz-row{display:flex;flex-wrap:wrap;gap:6px}
+.sz-btn{font-size:9px;font-family:'Inter',sans-serif;padding:4px 8px;border:1px solid rgba(28,28,28,.2);cursor:pointer;transition:all .15s;background:#fff;color:var(--charcoal)}
+.sz-btn:hover,.sz-btn.active{border-color:var(--gold);background:var(--gold);color:#fff}
+.cpcard-wish{position:absolute;bottom:60px;right:12px;background:#fff;border:none;padding:7px;opacity:0;cursor:pointer;transition:opacity .2s}
+.cpcard:hover .cpcard-wish{opacity:1}
+.cpcard-wish svg{width:14px;height:14px;stroke:var(--charcoal);stroke-width:1.5;fill:none}
+.cpcard-cat{font-size:9px;letter-spacing:.16em;color:var(--gold);font-weight:500;font-family:'Inter',sans-serif;margin-bottom:5px}
+.cpcard-name{font-size:15px;font-weight:500;color:var(--charcoal);margin-bottom:3px;transition:color .2s}
+.cpcard:hover .cpcard-name{color:var(--gold-dk)}
+.cpcard-sub{font-size:12px;color:var(--muted);margin-bottom:8px}
+.cpcard-stars{font-size:11px;color:var(--gold)}
+.cpcard-revs{font-size:10px;color:var(--muted);margin-left:4px}
+.cpcard-pr{display:flex;align-items:baseline;gap:8px;margin-top:8px 0 14px}
+.cpcard-price{font-size:16px;font-weight:600;color:var(--charcoal)}
+.cpcard-orig{font-size:12px;color:var(--muted);text-decoration:line-through}
+.cpcard-save{font-size:10px;color:var(--gold-dk);font-weight:500;margin-left:auto}
+.cpcard-btn{width:100%;background:var(--gold);color:var(--charcoal);border:none;font-size:9px;letter-spacing:.18em;font-family:'Inter',sans-serif;padding:13px;cursor:pointer;margin-top:12px;transition:background .25s}
+.cpcard-btn:hover{background:var(--gold-md)}
+.cp-coming{margin-top:40px;border:1px dashed var(--gold-md);padding:32px;text-align:center}
+.cp-coming-ey{font-size:9px;letter-spacing:.18em;color:var(--gold);font-weight:500;margin-bottom:6px}
+.cp-coming-t{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--charcoal);margin-bottom:5px}
+.cp-coming-s{font-size:12px;color:var(--muted)}
+.cp-coming-btn{display:inline-block;border:1px solid var(--gold);color:var(--gold-dk);font-size:9px;letter-spacing:.18em;font-family:'Inter',sans-serif;padding:9px 22px;cursor:pointer;margin-top:14px;transition:all .25s;background:none}
+.cp-coming-btn:hover{background:var(--gold);color:#fff}
+.cp-back{text-align:center;margin-top:36px}
+.cp-back button{background:none;border:none;font-size:10px;letter-spacing:.14em;font-family:'Inter',sans-serif;color:var(--muted);cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:color .2s}
+.cp-back button:hover{color:var(--charcoal)}
+
+/* product detail modal */
+#pd-modal{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;padding:0;display:none}
+#pd-modal.open{display:flex}
+.pd-bd{position:absolute;inset:0;background:rgba(28,28,28,.5)}
+.pd-panel{position:relative;background:#fff;width:100%;max-width:820px;margin:0 auto;max-height:90vh;overflow-y:auto;display:grid;grid-template-columns:1fr 1fr}
+@media(max-width:640px){.pd-panel{grid-template-columns:1fr;max-height:95vh}}
+.pd-img{position:relative}
+.pd-img img{width:100%;height:100%;object-fit:cover;display:block}
+.pd-bdg{position:absolute;top:14px;left:14px;font-size:9px;font-family:'Inter',sans-serif;font-weight:500;letter-spacing:.1em;padding:4px 9px}
+.pd-close{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.85);border:none;cursor:pointer;padding:8px}
+.pd-close svg{width:18px;height:18px;stroke:var(--charcoal);stroke-width:1.5;fill:none}
+.pd-info{padding:36px 32px;display:flex;flex-direction:column;justify-content:center}
+.pd-ey{font-size:9px;letter-spacing:.18em;color:var(--gold);font-weight:500;margin-bottom:10px}
+.pd-h2{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:var(--charcoal);margin-bottom:4px}
+.pd-sub{font-size:13px;color:var(--muted);margin-bottom:12px}
+.pd-stars{font-size:11px;color:var(--gold)}
+.pd-revs{font-size:11px;color:var(--muted);margin-left:5px}
+.pd-desc{font-size:13px;font-weight:300;color:var(--muted);line-height:1.75;margin:14px 0}
+.pd-dv{height:1px;background:var(--border);margin:14px 0}
+.pd-price-row{display:flex;align-items:baseline;gap:10px;margin-bottom:20px}
+.pd-price{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:var(--charcoal)}
+.pd-orig{font-size:14px;color:var(--muted);text-decoration:line-through}
+.pd-off{font-size:11px;color:var(--gold-dk);background:var(--gold-lt);padding:3px 8px;font-family:'Inter',sans-serif;font-weight:500}
+.pd-sz-lbl{font-size:9px;letter-spacing:.16em;color:var(--charcoal);font-weight:500;margin-bottom:10px}
+.pd-sz-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.pd-sz{border:1px solid rgba(28,28,28,.2);font-size:11px;font-family:'Inter',sans-serif;padding:7px 12px;cursor:pointer;transition:all .15s;background:#fff;color:var(--charcoal)}
+.pd-sz:hover,.pd-sz.active{border-color:var(--gold);background:var(--gold);color:#fff}
+.pd-qty-row{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.pd-qty{display:flex;align-items:center;border:1px solid rgba(28,28,28,.15)}
+.pd-qty button{width:34px;height:34px;background:none;border:none;cursor:pointer;font-size:15px;color:var(--charcoal);transition:background .15s;font-family:inherit}
+.pd-qty button:hover{background:var(--gold-lt)}
+.pd-qty span{width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500}
+.pd-qty-note{font-size:10px;color:var(--muted)}
+.pd-btn1{width:100%;background:var(--charcoal);color:#fff;border:none;font-size:9px;letter-spacing:.18em;font-family:'Inter',sans-serif;padding:15px;cursor:pointer;margin-bottom:9px;transition:background .25s}
+.pd-btn1:hover{background:var(--gold);color:var(--charcoal)}
+.pd-btn2{width:100%;background:transparent;color:var(--charcoal);border:1px solid rgba(28,28,28,.2);font-size:9px;letter-spacing:.18em;font-family:'Inter',sans-serif;padding:13px;cursor:pointer;transition:all .25s}
+.pd-btn2:hover{border-color:var(--gold);color:var(--gold-dk)}
+.pd-trust{margin-top:18px;padding-top:18px;border-top:1px solid var(--border)}
+.pd-tr{font-size:10px;color:var(--muted);display:flex;align-items:center;gap:7px;margin-bottom:5px}
+.pd-tr span{color:var(--gold)}
+
+/* cart drawer */
+#cbd{position:fixed;inset:0;z-index:40;background:rgba(28,28,28,.4);opacity:0;pointer-events:none;transition:opacity .45s}
+#cbd.open{opacity:1;pointer-events:auto}
+#cdr{position:fixed;top:0;right:0;z-index:50;height:100%;width:100%;max-width:410px;background:#fff;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .5s cubic-bezier(.22,1,.36,1)}
+#cdr.open{transform:translateX(0)}
+.cdr-hd{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid var(--border)}
+.cdr-t{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--charcoal)}
+.cdr-s{font-size:9px;letter-spacing:.16em;color:var(--muted);margin-top:1px}
+.cdr-x{background:none;border:none;cursor:pointer;color:var(--muted)}
+.cdr-x svg{width:19px;height:19px;stroke:currentColor;stroke-width:1.5;fill:none}
+.cdr-up{padding:12px 22px;background:var(--gold-lt);border-bottom:1px solid var(--border)}
+.up-t{font-size:12px;color:var(--charcoal);margin-bottom:8px}
+.up-t span{font-weight:600;color:var(--gold-dk)}
+.up-bar{height:1px;background:var(--gold-md);position:relative}
+.up-fill{position:absolute;inset-y:0;left:0;background:var(--gold)}
+.up-range{display:flex;justify-content:space-between;margin-top:4px;font-size:9px;color:var(--muted)}
+.cdr-items{flex:1;overflow-y:auto;padding:18px 22px;display:flex;flex-direction:column;gap:18px;scrollbar-width:none}
+.cdr-items::-webkit-scrollbar{display:none}
+.cdr-item{display:flex;gap:12px}
+.cdr-thumb{width:68px;height:82px;flex-shrink:0;overflow:hidden}
+.cdr-thumb img{width:100%;height:100%;object-fit:cover}
+.cdr-ict{font-size:9px;letter-spacing:.14em;color:var(--gold);font-weight:500;margin-bottom:2px}
+.cdr-inm{font-size:12px;font-weight:500;color:var(--charcoal);margin-bottom:8px}
+.cdr-qr{display:flex;align-items:center;justify-content:space-between}
+.cdr-qty{display:flex;align-items:center;border:1px solid rgba(28,28,28,.15)}
+.cdr-qty button{width:26px;height:26px;background:none;border:none;cursor:pointer;font-size:14px;color:var(--charcoal);font-family:inherit}
+.cdr-qty button:hover{background:var(--gold-lt)}
+.cdr-qty span{width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500}
+.cdr-ip{font-size:12px;font-weight:600;color:var(--charcoal)}
+.cdr-ft{padding:14px 22px;border-top:1px solid var(--border);background:#fff}
+.cdr-sub{display:flex;justify-content:space-between;margin-bottom:3px}
+.cdr-sl{font-size:10px;letter-spacing:.1em;color:var(--muted)}
+.cdr-sv{font-size:13px;font-weight:600;color:var(--charcoal)}
+.cdr-note{font-size:10px;color:var(--muted);margin-bottom:14px}
+.cdr-b1{width:100%;background:var(--charcoal);color:#fff;border:none;font-size:9px;letter-spacing:.18em;font-family:'Inter',sans-serif;padding:14px;cursor:pointer;margin-bottom:7px;transition:background .25s}
+.cdr-b1:hover{background:var(--gold);color:var(--charcoal)}
+.cdr-b2{width:100%;background:transparent;color:var(--charcoal);border:1px solid rgba(28,28,28,.18);font-size:9px;letter-spacing:.18em;font-family:'Inter',sans-serif;padding:12px;cursor:pointer;transition:all .25s}
+.cdr-b2:hover{border-color:var(--gold);color:var(--gold-dk)}
+
+/* footer */
+footer{background:var(--charcoal);color:rgba(255,255,255,.4);padding:52px 40px 26px}
+.ft-in{max-width:1200px;margin:0 auto}
+.ft-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:44px}
+@media(max-width:700px){.ft-grid{grid-template-columns:1fr 1fr}}
+.ft-logo{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:#fff;letter-spacing:.12em}
+.ft-logo span{color:var(--gold)}
+.ft-sub{font-size:9px;letter-spacing:.2em;color:var(--gold);font-weight:500;margin-top:2px}
+.ft-tag{font-size:12px;font-weight:300;color:rgba(255,255,255,.32);line-height:1.75;margin-top:16px;max-width:230px}
+.ft-nl-lbl{font-size:9px;letter-spacing:.18em;color:rgba(255,255,255,.42);margin:22px 0 8px}
+.ft-nl{display:flex;border:1px solid rgba(255,255,255,.1);transition:border-color .2s}
+.ft-nl:focus-within{border-color:rgba(212,175,55,.4)}
+.ft-nl input{flex:1;background:transparent;border:none;padding:9px 12px;font-size:12px;color:rgba(255,255,255,.65);outline:none;font-family:'Inter',sans-serif}
+.ft-nl input::placeholder{color:rgba(255,255,255,.2)}
+.ft-nl button{background:var(--gold);border:none;padding:9px 12px;font-size:9px;letter-spacing:.16em;color:var(--charcoal);font-weight:600;cursor:pointer;font-family:inherit}
+.ft-nl button:hover{background:var(--gold-md)}
+.ft-soc{display:flex;gap:12px;margin-top:14px}
+.ft-soc a{font-size:9px;letter-spacing:.12em;color:rgba(255,255,255,.22);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.08);padding-bottom:2px;transition:all .2s}
+.ft-soc a:hover{color:var(--gold);border-bottom-color:var(--gold)}
+.ft-col h4{font-size:9px;letter-spacing:.18em;color:rgba(255,255,255,.52);font-weight:500;margin-bottom:14px}
+.ft-col a{display:block;font-size:12px;color:rgba(255,255,255,.28);text-decoration:none;font-weight:300;margin-bottom:8px;transition:color .2s}
+.ft-col a:hover{color:var(--gold)}
+.ft-bot{border-top:1px solid rgba(255,255,255,.07);padding-top:18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.ft-copy{font-size:10px;color:rgba(255,255,255,.18)}
+.ft-pay{display:flex;gap:5px;flex-wrap:wrap}
+.ft-pay span{font-size:9px;letter-spacing:.08em;color:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.1);padding:3px 8px}
+
+/* anim */
+.anim{opacity:0;transition:opacity .7s ease,transform .7s cubic-bezier(.22,1,.36,1)}
+.anim.up{transform:translateY(26px)}.anim.left{transform:translateX(-26px)}.anim.right{transform:translateX(26px)}
+.anim.visible{opacity:1;transform:none}
+
+@media(max-width:640px){.ps-in{grid-template-columns:repeat(2,1fr)}.ps-i{padding:10px 12px;border:none;border-bottom:1px solid rgba(255,255,255,.06)}.ft-grid{grid-template-columns:1fr 1fr}.cat-grid{grid-template-columns:1fr}.prod-grid{grid-template-columns:repeat(2,1fr)}.nb-main{padding:12px 16px}.cat-sec,.prod-sec,.ed-sec{padding:40px 16px}.hero-inner{padding:40px 20px}.ps{padding:12px 16px}.stats-in{padding:0 20px}.cp-bc,.cp-hero,.cp-filters,.cp-grid-wrap{padding-left:16px;padding-right:16px}.cp-hero{padding-top:32px;padding-bottom:32px}}
+</style>
+</head>
+<body>
+
+<div id="announce">COMPLIMENTARY SHIPPING ON ORDERS OVER $150 · USE CODE <span>CHMICHA20</span></div>
+
+<!-- NAVBAR -->
+<div id="navbar" class="solid">
+  <div class="nb-main">
+    <a href="#" class="logo-w" onclick="showPage('home');return false"><span class="logo-n">CHMICHA</span><span class="logo-s track-lux">PARIS · LUXE FASHION</span></a>
+    <div class="search-b">
+      <select><option>All</option><option>Clothes</option><option>Accessories</option><option>Shoes</option></select>
+      <input type="text" placeholder="Search for pieces…"/>
+      <button><svg style="width:15px;height:15px;stroke:#fff;stroke-width:1.5;fill:none;vertical-align:middle" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"/></svg></button>
+    </div>
+    <div class="nb-icons">
+      <a href="#" class="nb-icon"><svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A8.966 8.966 0 0 1 12 15c2.485 0 4.74.952 6.879 2.804M15 11a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/></svg><span class="track-w">ACCOUNT</span></a>
+      <a href="#" class="nb-icon"><svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg><span class="track-w">WISHLIST</span></a>
+      <div class="cart-rel"><button class="nb-icon" id="cartBtn"><svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg><span class="track-w">BAG</span></button><div class="cart-b">3</div></div>
+    </div>
+  </div>
+  <nav class="nb-nav"><ul>
+    <li><a href="#" onclick="showPage('home');return false">NEW IN</a></li>
+    <li><a href="#" onclick="showPage('clothes');return false">CLOTHES</a></li>
+    <li><a href="#" onclick="showPage('shoes');return false">SHOES</a></li>
+    <li><a href="#" onclick="showPage('accessories');return false">ACCESSORIES</a></li>
+    <li><a href="#">SALE</a></li><li><a href="#">DESIGNERS</a></li><li><a href="#">GIFT EDIT</a></li>
+  </ul></nav>
+</div>
+
+<!-- ═══ HOME PAGE ═══ -->
+<div id="page-home" class="page active">
+
+<!-- HERO -->
+<section class="hero">
+  <img class="hero-poster" src="https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=1600&q=70" alt=""/>
+  <div class="hero-s1"></div><div class="hero-s2"></div>
+  <div class="hero-inner">
+    <div class="anim left" style="transition-delay:100ms">
+      <p class="hero-ey track-lux">PRIVATE SALE · LIMITED TIME</p>
+      <h1>The Art of<br/><em>Dressing Well.</em></h1>
+      <p>Curated pieces for the discerning wardrobe. Up to 40% off our most coveted styles — today only.</p>
+      <div class="cta-row">
+        <button class="btn-gold track-lux" onclick="showPage('clothes')">SHOP THE EDIT</button>
+        <button class="btn-gw track-lux">VIEW LOOKBOOK</button>
+      </div>
+      <div class="trust-row">
+        <div class="ti"><div class="ti-r"></div><div><div class="ti-t track-w">Complimentary</div><div class="ti-s">Shipping & Returns</div></div></div>
+        <div class="ti"><div class="ti-r"></div><div><div class="ti-t track-w">Authenticity</div><div class="ti-s">Guaranteed</div></div></div>
+        <div class="ti"><div class="ti-r"></div><div><div class="ti-t track-w">White Glove</div><div class="ti-s">Packaging</div></div></div>
+      </div>
+    </div>
+    <div class="anim right" style="transition-delay:300ms;display:flex;justify-content:flex-end">
+      <div class="sale-card">
+        <div class="dv-row"><div class="dv-line"></div><span class="dv-txt track-lux">SALE CLOSES IN</span><div class="dv-line"></div></div>
+        <div class="timer-w"><div class="t-u"><div class="t-n" id="hh">--</div><div class="t-l">HRS</div></div><span class="t-s">·</span><div class="t-u"><div class="t-n" id="mm">--</div><div class="t-l">MIN</div></div><span class="t-s">·</span><div class="t-u"><div class="t-n" id="ss">--</div><div class="t-l">SEC</div></div></div>
+        <div class="cd"></div>
+        <p class="stk-hd track-lux">SELLING QUICKLY</p>
+        <div class="stk-r"><div class="stk-hr"><span class="stk-nm">Silk Evening Dress</span><span class="stk-p track-w">82% CLAIMED</span></div><div class="bar-t"><div class="bar-f" style="width:82%"></div></div></div>
+        <div class="stk-r"><div class="stk-hr"><span class="stk-nm">Patent Leather Heels</span><span class="stk-p track-w">91% CLAIMED</span></div><div class="bar-t"><div class="bar-f" style="width:91%"></div></div></div>
+        <div class="stk-r"><div class="stk-hr"><span class="stk-nm">Cashmere Trench Coat</span><span class="stk-p track-w">67% CLAIMED</span></div><div class="bar-t"><div class="bar-f" style="width:67%"></div></div></div>
+        <div class="cd"></div>
+        <div class="promo-r2"><div class="promo-l2 track-lux">EXCLUSIVE OFFER<strong>Extra 20% off with code</strong></div><div class="promo-c2 track-w">CHMICHA20</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="stats-s"><div class="stats-in"><div class="stat-i"><div class="stat-v">12,000+</div><div class="stat-l track-lux">CURATED PIECES</div></div><div class="stat-i"><div class="stat-v">142</div><div class="stat-l track-lux">DESIGNER LABELS</div></div><div class="stat-i"><div class="stat-v">4.9 ★</div><div class="stat-l track-lux">CUSTOMER RATING</div></div></div></div>
+</section>
+
+<!-- PROMO STRIP -->
+<div class="ps anim up"><div class="ps-in">
+  <div class="ps-i"><span class="ps-ic">✦</span><div><div class="ps-t track-w">Complimentary Shipping</div><div class="ps-s">On all orders over $150</div></div></div>
+  <div class="ps-i"><span class="ps-ic">✦</span><div><div class="ps-t track-w">Effortless Returns</div><div class="ps-s">30-day free returns</div></div></div>
+  <div class="ps-i"><span class="ps-ic">✦</span><div><div class="ps-t track-w">Authenticity Assured</div><div class="ps-s">100% genuine pieces</div></div></div>
+  <div class="ps-i"><span class="ps-ic">✦</span><div><div class="ps-t track-w">Private Client Service</div><div class="ps-s">Dedicated styling advisors</div></div></div>
+</div></div>
+
+<!-- CATEGORIES with real images -->
+<div class="cat-sec"><div class="sec-in">
+  <div class="sec-hd anim up"><div><p class="sec-ey track-lux">COLLECTIONS</p><h2 class="sec-t">Shop by Category</h2></div><button class="va track-lux" onclick="showPage('clothes')">VIEW ALL</button></div>
+  <div class="cat-grid">
+    <button class="cat-card anim left" onclick="showPage('clothes')" style="transition-delay:0ms">
+      <div class="cat-img-wrap"><img src="./clothes.webp" alt="Clothes"/><div class="cat-ov"></div><div class="cat-cta-w"><span class="cat-cta-b track-lux">EXPLORE NOW</span></div></div>
+      <div class="cat-lbl"><div class="cat-lt"><div><div class="cat-n">Clothes</div><div class="cat-sb">Ready-to-Wear</div></div><svg class="cat-arr" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></div><div class="cat-cnt track-lux">2,400+ PIECES</div><div class="cat-rl"></div></div>
+    </button>
+    <button class="cat-card anim up" onclick="showPage('accessories')" style="transition-delay:120ms">
+      <div class="cat-img-wrap"><img src="./accessoire.webp" alt="Accessories"/><div class="cat-ov"></div><div class="cat-cta-w"><span class="cat-cta-b track-lux">EXPLORE NOW</span></div></div>
+      <div class="cat-lbl"><div class="cat-lt"><div><div class="cat-n">Accessories</div><div class="cat-sb">The Details</div></div><svg class="cat-arr" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></div><div class="cat-cnt track-lux">1,800+ PIECES</div><div class="cat-rl"></div></div>
+    </button>
+    <button class="cat-card anim right" onclick="showPage('shoes')" style="transition-delay:240ms">
+      <div class="cat-img-wrap"><img src="./shoes.webp" alt="Shoes"/><div class="cat-ov"></div><div class="cat-cta-w"><span class="cat-cta-b track-lux">EXPLORE NOW</span></div></div>
+      <div class="cat-lbl"><div class="cat-lt"><div><div class="cat-n">Shoes</div><div class="cat-sb">Fine Footwear</div></div><svg class="cat-arr" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></div><div class="cat-cnt track-lux">950+ PIECES</div><div class="cat-rl"></div></div>
+    </button>
+  </div>
+</div></div>
+
+<!-- FEATURED PRODUCTS placeholder -->
+<div class="prod-sec"><div class="sec-in">
+  <div class="sec-hd anim up"><div><p class="sec-ey track-lux">PRIVATE SALE</p><h2 class="sec-t">Featured Pieces</h2></div><div style="text-align:right"><button class="va track-lux" onclick="showPage('clothes')">VIEW ALL</button><div style="font-size:10px;color:var(--muted);margin-top:4px">Sale ends tonight</div></div></div>
+  <div class="prod-grid">
+    <div class="pc anim up" style="transition-delay:0ms" onclick="openProduct('clothes','Silk Wrap Dress','DRESSES','./clothes1.webp',189,315,'EXCLUSIVE DROP','bdg-e')"><div class="pc-img"><img src="./clothes1.webp" alt="Silk Wrap Dress" style="width:100%;height:100%;object-fit:cover"/><span class="pc-bdg bdg-e track-w">EXCLUSIVE</span><span class="pc-disc track-w">-40%</span><div class="pc-add track-lux">ADD TO BAG</div></div><div class="pc-cat track-lux">DRESSES</div><div class="pc-name">Silk Wrap Dress</div><div><span class="pc-stars">★★★★★</span><span class="pc-revs">(214)</span></div><div class="pc-pr"><span class="pc-price">$189</span><span class="pc-orig">$315</span><span class="pc-save">Save $126</span></div></div>
+    <div class="pc anim up" style="transition-delay:70ms" onclick="openProduct('shoes','Patent Leather Pumps','SHOES','./shoes1.webp',375,620,'BESTSELLER','bdg-b')"><div class="pc-img"><img src="./shoes1.webp" alt="Patent Leather Pumps" style="width:100%;height:100%;object-fit:cover"/><span class="pc-bdg bdg-b track-w">BESTSELLER</span><span class="pc-disc track-w">-40%</span><div class="pc-add track-lux">ADD TO BAG</div></div><div class="pc-cat track-lux">SHOES</div><div class="pc-name">Patent Leather Pumps</div><div><span class="pc-stars">★★★★★</span><span class="pc-revs">(178)</span></div><div class="pc-pr"><span class="pc-price">$375</span><span class="pc-orig">$620</span><span class="pc-save">Save $245</span></div></div>
+    <div class="pc anim up" style="transition-delay:140ms" onclick="openProduct('accessories','Chain-link Clutch','BAGS','./accessoire1.webp',310,520,'LIMITED EDITION','bdg-e')"><div class="pc-img"><img src="./accessoire1.webp" alt="Chain-link Clutch" style="width:100%;height:100%;object-fit:cover"/><span class="pc-bdg bdg-e track-w">LIMITED</span><span class="pc-disc track-w">-40%</span><div class="pc-add track-lux">ADD TO BAG</div></div><div class="pc-cat track-lux">BAGS</div><div class="pc-name">Chain-link Clutch</div><div><span class="pc-stars">★★★★★</span><span class="pc-revs">(133)</span></div><div class="pc-pr"><span class="pc-price">$310</span><span class="pc-orig">$520</span><span class="pc-save">Save $210</span></div></div>
+    <div class="pc anim up" style="transition-delay:210ms" onclick="openProduct('clothes','Tailored Linen Blazer','OUTERWEAR','./clothes2.webp',420,700,'FAST SELLING','bdg-b')"><div class="pc-img"><img src="./clothes2.webp" alt="Tailored Linen Blazer" style="width:100%;height:100%;object-fit:cover"/><span class="pc-bdg bdg-b track-w">FAST SELLING</span><span class="pc-disc track-w">-40%</span><div class="pc-add track-lux">ADD TO BAG</div></div><div class="pc-cat track-lux">OUTERWEAR</div><div class="pc-name">Tailored Linen Blazer</div><div><span class="pc-stars">★★★★★</span><span class="pc-revs">(89)</span></div><div class="pc-pr"><span class="pc-price">$420</span><span class="pc-orig">$700</span><span class="pc-save">Save $280</span></div></div>
+    <div class="pc anim up" style="transition-delay:280ms" onclick="openProduct('accessories','Silk Twill Carré','SCARVES','./accessoire2.webp',195,320,'FAST SELLING','bdg-b')"><div class="pc-img"><img src="./accessoire2.webp" alt="Silk Twill Carré" style="width:100%;height:100%;object-fit:cover"/><span class="pc-bdg bdg-b track-w">FAST SELLING</span><span class="pc-disc track-w">-39%</span><div class="pc-add track-lux">ADD TO BAG</div></div><div class="pc-cat track-lux">SCARVES</div><div class="pc-name">Silk Twill Carré</div><div><span class="pc-stars">★★★★★</span><span class="pc-revs">(302)</span></div><div class="pc-pr"><span class="pc-price">$195</span><span class="pc-orig">$320</span><span class="pc-save">Save $125</span></div></div>
+    <div class="pc anim up" style="transition-delay:350ms" onclick="openProduct('shoes','Suede Block-Heel Mules','SHOES','./shoes2.webp',295,490,'EXCLUSIVE DROP','bdg-e')"><div class="pc-img"><img src="./shoes2.webp" alt="Suede Block-Heel Mules" style="width:100%;height:100%;object-fit:cover"/><span class="pc-bdg bdg-e track-w">EXCLUSIVE</span><span class="pc-disc track-w">-40%</span><div class="pc-add track-lux">ADD TO BAG</div></div><div class="pc-cat track-lux">SHOES</div><div class="pc-name">Suede Block-Heel Mules</div><div><span class="pc-stars">★★★★★</span><span class="pc-revs">(256)</span></div><div class="pc-pr"><span class="pc-price">$295</span><span class="pc-orig">$490</span><span class="pc-save">Save $195</span></div></div>
+  </div>
+</div></div>
+
+<!-- EDITORIAL -->
+<div class="ed-sec"><div class="sec-in">
+  <div class="sec-hd anim up"><div><p class="sec-ey track-lux">EDITORIAL</p><h2 class="sec-t">The Journal</h2></div><a href="#" class="va track-lux">ALL STORIES</a></div>
+  <div class="ed-grid">
+    <div class="ed-lg anim left">
+      <div class="ed-lg-img" style="min-height:420px;position:relative;overflow:hidden"><img src="./journal.webp" alt="Power Dressing Reborn" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"/><span class="ed-tag-lbl track-lux" style="z-index:1">THE EDIT</span></div>
+      <div style="padding-top:18px"><div class="ed-ey"><span class="track-lux">THE EDIT</span></div><h3 class="ed-title">Power Dressing<br/>Reborn</h3><p class="ed-exc">The modern wardrobe demands versatility without compromise. We explore how tailoring has evolved into the ultimate expression of quiet confidence.</p><a href="#" class="ed-rd track-lux">READ MORE <svg style="width:12px;height:12px;stroke:currentColor;stroke-width:2;fill:none;display:inline" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></a></div>
+    </div>
+    <div class="ed-sp">
+      <div class="anim right" style="transition-delay:150ms"><div class="ed-sm"><div class="ed-sm-img" style="width:150px;aspect-ratio:1;position:relative;flex-shrink:0;overflow:hidden"><img src="./journal1.webp" alt="The New Minimalism" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"/><span class="ed-tag-lbl track-lux" style="z-index:1">STYLE FILE</span></div><div style="padding:4px 0"><div class="ed-ey"><span class="track-lux">STYLE FILE</span></div><h3 class="ed-sm-t">The New Minimalism</h3><p class="ed-sm-exc">Less, but infinitely better. How the capsule wardrobe concept is reshaping what we buy and why.</p><a href="#" class="ed-rd track-lux">READ MORE</a></div></div></div>
+      <div class="ed-dv"></div>
+      <div class="anim right" style="transition-delay:300ms"><div class="ed-sm"><div class="ed-sm-img" style="width:150px;aspect-ratio:1;position:relative;flex-shrink:0;overflow:hidden"><img src="./journal2.webp" alt="Craft & Provenance" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"/><span class="ed-tag-lbl track-lux" style="z-index:1">BEHIND THE LABEL</span></div><div style="padding:4px 0"><div class="ed-ey"><span class="track-lux">BEHIND THE LABEL</span></div><h3 class="ed-sm-t">Craft & Provenance</h3><p class="ed-sm-exc">We visit the ateliers of three emerging designers redefining luxury through artisanal technique.</p><a href="#" class="ed-rd track-lux">READ MORE</a></div></div></div>
+    </div>
+  </div>
+  <div class="ed-qt anim up" style="transition-delay:100ms"><p class="ed-q-t">Style is a way to say who you are without having to speak.</p><p class="ed-q-a track-lux">— RACHEL ZOE</p><div class="nl-r"><input class="nl-in" type="email" placeholder="Your email address"/><button class="nl-btn track-lux">JOIN THE INNER CIRCLE</button></div><p class="nl-note">Exclusive previews, private sales, and editorial content.</p></div>
+</div></div>
+
+</div><!-- /page-home -->
+
+
+<!-- ═══ CATEGORY PAGES ═══ -->
+<div id="page-clothes" class="page">
+  <div class="cp-bc"><div class="cp-bc-in"><button onclick="showPage('home')">Home</button><span>›</span><span style="color:var(--charcoal);font-weight:500">Clothes</span></div></div>
+  <div class="cp-hero"><div class="cp-hero-in"><p class="cp-ey track-lux">READY-TO-WEAR</p><h1 class="cp-h1">Clothes</h1><p class="cp-desc">Effortless elegance for the modern wardrobe. Each piece is crafted to move with you through every occasion.</p></div></div>
+  <div class="cp-filters"><div class="cp-fil-in"><div class="fil-tags"><button class="fil-tag track-w">ALL</button><button class="fil-tag track-w">NEW IN</button><button class="fil-tag track-w">UNDER $300</button><button class="fil-tag track-w">SALE</button></div><button class="sort-btn track-w">SORT: FEATURED <svg style="width:11px;height:11px;stroke:currentColor;stroke-width:2;fill:none;display:inline;vertical-align:middle" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></button></div></div>
+  <div class="cp-grid-wrap">
+    <div class="cp-grid two-col">
+      <div class="cpcard anim up" style="transition-delay:0ms" onclick="openProduct('clothes','Fluid Silk Wrap Dress','DRESSES','./clothes1.webp',285,475,'EXCLUSIVE DROP','bdg-e')">
+        <div class="cpcard-img"><img src="./clothes1.webp" alt="Silk Wrap Dress"/><div class="cpcard-ov"></div><span class="cpcard-bdg bdg-e track-w">EXCLUSIVE DROP</span><span class="cpcard-disc track-w">-40%</span><div class="cpcard-sizes"><p class="cpcard-sizes-lbl track-lux">SELECT SIZE</p><div class="sz-row"><button class="sz-btn">XS</button><button class="sz-btn">S</button><button class="sz-btn active">M</button><button class="sz-btn">L</button><button class="sz-btn">XL</button></div></div><button class="cpcard-wish"><svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg></button></div>
+        <div class="cpcard-cat track-lux">DRESSES</div><div class="cpcard-name">Fluid Silk Wrap Dress</div><div class="cpcard-sub">In Ivory & Champagne</div><div><span class="cpcard-stars">★★★★★</span><span class="cpcard-revs">(214)</span></div>
+        <div class="cpcard-pr" style="margin:8px 0"><span class="cpcard-price">$285</span><span class="cpcard-orig">$475</span><span class="cpcard-save">Save $190</span></div>
+        <button class="cpcard-btn track-lux">ADD TO BAG</button>
+      </div>
+      <div class="cpcard anim up" style="transition-delay:120ms" onclick="openProduct('clothes','Tailored Linen Blazer','OUTERWEAR','./clothes2.webp',420,690,'FAST SELLING','bdg-b')">
+        <div class="cpcard-img"><img src="./clothes2.webp" alt="Linen Blazer"/><div class="cpcard-ov"></div><span class="cpcard-bdg bdg-b track-w">FAST SELLING</span><span class="cpcard-disc track-w">-39%</span><div class="cpcard-sizes"><p class="cpcard-sizes-lbl track-lux">SELECT SIZE</p><div class="sz-row"><button class="sz-btn">XS</button><button class="sz-btn">S</button><button class="sz-btn">M</button><button class="sz-btn">L</button></div></div><button class="cpcard-wish"><svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg></button></div>
+        <div class="cpcard-cat track-lux">OUTERWEAR</div><div class="cpcard-name">Tailored Linen Blazer</div><div class="cpcard-sub">In Warm Stone</div><div><span class="cpcard-stars">★★★★★</span><span class="cpcard-revs">(89)</span></div>
+        <div class="cpcard-pr" style="margin:8px 0"><span class="cpcard-price">$420</span><span class="cpcard-orig">$690</span><span class="cpcard-save">Save $270</span></div>
+        <button class="cpcard-btn track-lux">ADD TO BAG</button>
+      </div>
+    </div>
+    <div class="cp-coming anim up" style="transition-delay:200ms"><p class="cp-coming-ey track-lux">ARRIVING SOON</p><p class="cp-coming-t">More Pieces Are On Their Way</p><p class="cp-coming-s">Join the inner circle to be notified first.</p><button class="cp-coming-btn track-lux">NOTIFY ME</button></div>
+    <div class="cp-back"><button onclick="showPage('home')"><svg style="width:13px;height:13px;stroke:currentColor;stroke-width:2;fill:none;display:inline;vertical-align:middle;margin-right:6px" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 16l-4-4m0 0l4-4m-4 4h18"/></svg>BACK TO HOME</button></div>
+  </div>
+</div>
+
+<div id="page-accessories" class="page">
+  <div class="cp-bc"><div class="cp-bc-in"><button onclick="showPage('home')">Home</button><span>›</span><span style="color:var(--charcoal);font-weight:500">Accessories</span></div></div>
+  <div class="cp-hero"><div class="cp-hero-in"><p class="cp-ey track-lux">THE DETAILS</p><h1 class="cp-h1">Accessories</h1><p class="cp-desc">The finishing touch that transforms an outfit into a statement. Curated for those who understand that less is always more.</p></div></div>
+  <div class="cp-filters"><div class="cp-fil-in"><div class="fil-tags"><button class="fil-tag track-w">ALL</button><button class="fil-tag track-w">NEW IN</button><button class="fil-tag track-w">UNDER $200</button><button class="fil-tag track-w">SALE</button></div><button class="sort-btn track-w">SORT: FEATURED <svg style="width:11px;height:11px;stroke:currentColor;stroke-width:2;fill:none;display:inline;vertical-align:middle" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></button></div></div>
+  <div class="cp-grid-wrap">
+    <div class="cp-grid three-col">
+      <div class="cpcard anim up" style="transition-delay:0ms" onclick="openProduct('accessories','Chain-link Evening Clutch','BAGS','./accessoire1.webp',310,520,'LIMITED EDITION','bdg-e')">
+        <div class="cpcard-img"><img src="./accessoire1.webp" alt="Clutch"/><div class="cpcard-ov"></div><span class="cpcard-bdg bdg-e track-w">LIMITED EDITION</span><span class="cpcard-disc track-w">-40%</span><div class="cpcard-sizes"><p class="cpcard-sizes-lbl track-lux">ONE SIZE</p><div class="sz-row"><button class="sz-btn active">One Size</button></div></div><button class="cpcard-wish"><svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg></button></div>
+        <div class="cpcard-cat track-lux">BAGS</div><div class="cpcard-name">Chain-link Evening Clutch</div><div class="cpcard-sub">In Burnished Gold</div><div><span class="cpcard-stars">★★★★★</span><span class="cpcard-revs">(133)</span></div>
+        <div class="cpcard-pr" style="margin:8px 0"><span class="cpcard-price">$310</span><span class="cpcard-orig">$520</span><span class="cpcard-save">Save $210</span></div>
+        <button class="cpcard-btn track-lux">ADD TO BAG</button>
+      </div>
+      <div class="cpcard anim up" style="transition-delay:100ms" onclick="openProduct('accessories','Silk Twill Carré','SCARVES','./accessoire2.webp',195,320,'FAST SELLING','bdg-b')">
+        <div class="cpcard-img"><img src="./accessoire2.webp" alt="Silk Scarf"/><div class="cpcard-ov"></div><span class="cpcard-bdg bdg-b track-w">FAST SELLING</span><span class="cpcard-disc track-w">-39%</span><div class="cpcard-sizes"><p class="cpcard-sizes-lbl track-lux">ONE SIZE</p><div class="sz-row"><button class="sz-btn active">One Size</button></div></div><button class="cpcard-wish"><svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg></button></div>
+        <div class="cpcard-cat track-lux">SCARVES</div><div class="cpcard-name">Silk Twill Carré</div><div class="cpcard-sub">90×90cm · Hand-rolled edges</div><div><span class="cpcard-stars">★★★★★</span><span class="cpcard-revs">(302)</span></div>
+        <div class="cpcard-pr" style="margin:8px 0"><span class="cpcard-price">$195</span><span class="cpcard-orig">$320</span><span class="cpcard-save">Save $125</span></div>
+        <button class="cpcard-btn track-lux">ADD TO BAG</button>
+      </div>
+      <div class="cpcard anim up" style="transition-delay:200ms" onclick="openProduct('accessories','Structured Leather Tote','BAGS','./accessoire3.webp',485,795,'LAST FEW','bdg-r')">
+        <div class="cpcard-img"><img src="./accessoire3.webp" alt="Leather Tote"/><div class="cpcard-ov"></div><span class="cpcard-bdg bdg-r track-w">LAST FEW</span><span class="cpcard-disc track-w">-39%</span><div class="cpcard-sizes"><p class="cpcard-sizes-lbl track-lux">ONE SIZE</p><div class="sz-row"><button class="sz-btn active">One Size</button></div></div><button class="cpcard-wish"><svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg></button></div>
+        <div class="cpcard-cat track-lux">BAGS</div><div class="cpcard-name">Structured Leather Tote</div><div class="cpcard-sub">In Cognac Full-Grain</div><div><span class="cpcard-stars">★★★★★</span><span class="cpcard-revs">(48)</span></div>
+        <div class="cpcard-pr" style="margin:8px 0"><span class="cpcard-price">$485</span><span class="cpcard-orig">$795</span><span class="cpcard-save">Save $310</span></div>
+        <button class="cpcard-btn track-lux">ADD TO BAG</button>
+      </div>
+    </div>
+    <div class="cp-coming anim up"><p class="cp-coming-ey track-lux">ARRIVING SOON</p><p class="cp-coming-t">More Pieces Are On Their Way</p><p class="cp-coming-s">Join the inner circle to be notified first.</p><button class="cp-coming-btn track-lux">NOTIFY ME</button></div>
+    <div class="cp-back"><button onclick="showPage('home')"><svg style="width:13px;height:13px;stroke:currentColor;stroke-width:2;fill:none;display:inline;vertical-align:middle;margin-right:6px" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 16l-4-4m0 0l4-4m-4 4h18"/></svg>BACK TO HOME</button></div>
+  </div>
+</div>
+
+<div id="page-shoes" class="page">
+  <div class="cp-bc"><div class="cp-bc-in"><button onclick="showPage('home')">Home</button><span>›</span><span style="color:var(--charcoal);font-weight:500">Shoes</span></div></div>
+  <div class="cp-hero"><div class="cp-hero-in"><p class="cp-ey track-lux">FINE FOOTWEAR</p><h1 class="cp-h1">Shoes</h1><p class="cp-desc">Where craftsmanship meets desire. Every pair is made to be the first thing you put on and the last thing you take off.</p></div></div>
+  <div class="cp-filters"><div class="cp-fil-in"><div class="fil-tags"><button class="fil-tag track-w">ALL</button><button class="fil-tag track-w">HEELS</button><button class="fil-tag track-w">FLATS</button><button class="fil-tag track-w">BOOTS</button><button class="fil-tag track-w">SALE</button></div><button class="sort-btn track-w">SORT: FEATURED <svg style="width:11px;height:11px;stroke:currentColor;stroke-width:2;fill:none;display:inline;vertical-align:middle" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></button></div></div>
+  <div class="cp-grid-wrap">
+    <div class="cp-grid two-col">
+      <div class="cpcard anim up" style="transition-delay:0ms" onclick="openProduct('shoes','Patent Leather Pumps','SHOES','./shoes1.webp',375,620,'BESTSELLER','bdg-b')">
+        <div class="cpcard-img"><img src="./shoes1.webp" alt="Patent Pumps"/><div class="cpcard-ov"></div><span class="cpcard-bdg bdg-b track-w">BESTSELLER</span><span class="cpcard-disc track-w">-40%</span><div class="cpcard-sizes"><p class="cpcard-sizes-lbl track-lux">SELECT SIZE</p><div class="sz-row"><button class="sz-btn">36</button><button class="sz-btn">37</button><button class="sz-btn active">38</button><button class="sz-btn">39</button><button class="sz-btn">40</button></div></div><button class="cpcard-wish"><svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg></button></div>
+        <div class="cpcard-cat track-lux">SHOES</div><div class="cpcard-name">Patent Leather Pumps</div><div class="cpcard-sub">85mm · In Noir</div><div><span class="cpcard-stars">★★★★★</span><span class="cpcard-revs">(178)</span></div>
+        <div class="cpcard-pr" style="margin:8px 0"><span class="cpcard-price">$375</span><span class="cpcard-orig">$620</span><span class="cpcard-save">Save $245</span></div>
+        <button class="cpcard-btn track-lux">ADD TO BAG</button>
+      </div>
+      <div class="cpcard anim up" style="transition-delay:120ms" onclick="openProduct('shoes','Suede Block-Heel Mules','SHOES','./shoes2.webp',295,490,'EXCLUSIVE DROP','bdg-e')">
+        <div class="cpcard-img"><img src="./shoes2.webp" alt="Suede Mules"/><div class="cpcard-ov"></div><span class="cpcard-bdg bdg-e track-w">EXCLUSIVE DROP</span><span class="cpcard-disc track-w">-40%</span><div class="cpcard-sizes"><p class="cpcard-sizes-lbl track-lux">SELECT SIZE</p><div class="sz-row"><button class="sz-btn">36</button><button class="sz-btn">37</button><button class="sz-btn">38</button><button class="sz-btn">39</button><button class="sz-btn active">40</button></div></div><button class="cpcard-wish"><svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg></button></div>
+        <div class="cpcard-cat track-lux">SHOES</div><div class="cpcard-name">Suede Block-Heel Mules</div><div class="cpcard-sub">65mm · In Camel</div><div><span class="cpcard-stars">★★★★★</span><span class="cpcard-revs">(256)</span></div>
+        <div class="cpcard-pr" style="margin:8px 0"><span class="cpcard-price">$295</span><span class="cpcard-orig">$490</span><span class="cpcard-save">Save $195</span></div>
+        <button class="cpcard-btn track-lux">ADD TO BAG</button>
+      </div>
+    </div>
+    <div class="cp-coming anim up"><p class="cp-coming-ey track-lux">ARRIVING SOON</p><p class="cp-coming-t">More Pieces Are On Their Way</p><p class="cp-coming-s">Join the inner circle to be notified first.</p><button class="cp-coming-btn track-lux">NOTIFY ME</button></div>
+    <div class="cp-back"><button onclick="showPage('home')"><svg style="width:13px;height:13px;stroke:currentColor;stroke-width:2;fill:none;display:inline;vertical-align:middle;margin-right:6px" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 16l-4-4m0 0l4-4m-4 4h18"/></svg>BACK TO HOME</button></div>
+  </div>
+</div>
+
+<!-- FOOTER (shared) -->
+<footer>
+  <div class="ft-in">
+    <div class="ft-grid">
+      <div><div class="ft-logo">CHMICHA<span>.</span></div><div class="ft-sub track-lux">PARIS · LUXE FASHION</div><p class="ft-tag">Curating the world's finest fashion for those who believe style is a form of self-expression.</p><p class="ft-nl-lbl track-lux">JOIN THE INNER CIRCLE</p><div class="ft-nl"><input type="email" placeholder="your@email.com"/><button class="track-lux">JOIN</button></div><div class="ft-soc"><a href="#" class="track-w">INSTAGRAM</a><a href="#" class="track-w">PINTEREST</a><a href="#" class="track-w">TIKTOK</a></div></div>
+      <div class="ft-col"><h4>CUSTOMER CARE</h4><a href="#">Contact Us</a><a href="#">Track My Order</a><a href="#">Returns</a><a href="#">Size Guide</a><a href="#">FAQ</a></div>
+      <div class="ft-col"><h4>OUR WORLD</h4><a href="#">About Chmicha</a><a href="#">Designers</a><a href="#">Sustainability</a><a href="#">Careers</a><a href="#">Press</a></div>
+      <div class="ft-col"><h4>LEGAL</h4><a href="#">Privacy Policy</a><a href="#">Terms of Service</a><a href="#">Cookie Settings</a></div>
+    </div>
+    <div class="ft-bot"><p class="ft-copy">© 2026 Chmicha. All rights reserved.</p><div class="ft-pay"><span>VISA</span><span>MASTERCARD</span><span>AMEX</span><span>APPLE PAY</span><span>PAYPAL</span></div></div>
+  </div>
+</footer>
+
+<!-- PRODUCT DETAIL MODAL -->
+<div id="pd-modal">
+  <div class="pd-bd" onclick="closePD()"></div>
+  <div class="pd-panel">
+    <div class="pd-img" id="pd-img-wrap">
+      <img id="pd-img" src="" alt="" style="min-height:400px"/>
+      <span id="pd-bdg" class="pd-bdg bdg-e track-w"></span>
+      <button class="pd-close" onclick="closePD()"><svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
+    </div>
+    <div class="pd-info">
+      <p class="pd-ey track-lux">CHMICHA · EXCLUSIVE</p>
+      <h2 class="pd-h2" id="pd-name"></h2>
+      <p class="pd-sub" id="pd-sub"></p>
+      <div><span class="pd-stars">★★★★★</span><span class="pd-revs">(48 reviews)</span></div>
+      <p class="pd-desc">Crafted with meticulous attention to detail. A piece that transcends seasons and trends.</p>
+      <div class="pd-dv"></div>
+      <div class="pd-price-row"><span class="pd-price" id="pd-price"></span><span class="pd-orig" id="pd-orig"></span><span class="pd-off" id="pd-off"></span></div>
+      <p class="pd-sz-lbl track-lux">SELECT SIZE</p>
+      <div class="pd-sz-row" id="pd-sz-row"></div>
+      <div class="pd-qty-row"><div class="pd-qty"><button onclick="pdQty(-1)">−</button><span id="pd-qty">1</span><button onclick="pdQty(1)">+</button></div><span class="pd-qty-note">Only a few pieces remain</span></div>
+      <button class="pd-btn1 track-lux" id="pd-atb">ADD TO BAG</button>
+      <button class="pd-btn2 track-lux">ADD TO WISHLIST</button>
+      <div class="pd-trust"><p class="pd-tr"><span>✦</span> Complimentary shipping on orders over $150</p><p class="pd-tr"><span>✦</span> Free returns within 30 days</p><p class="pd-tr"><span>✦</span> Authenticity guaranteed</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- CART DRAWER -->
+<div id="cbd"></div>
+<div id="cdr">
+  <div class="cdr-hd"><div><div class="cdr-t">Your Bag</div><div class="cdr-s track-lux">3 ITEMS</div></div><button class="cdr-x" id="cdrX"><svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button></div>
+  <div class="cdr-up"><p class="up-t">You are <span>$6</span> away from <strong>Complimentary Packaging</strong></p><div class="up-bar"><div class="up-fill" style="width:99%"></div></div><div class="up-range"><span>$0</span><span>✦ Packaging at $750</span></div></div>
+  <div class="cdr-items">
+    <div class="cdr-item"><div class="cdr-thumb"><img src="./clothes1.webp" alt="Silk Wrap Dress" style="width:100%;height:100%;object-fit:cover"/></div><div style="flex:1"><div class="cdr-ict track-lux">DRESSES</div><div class="cdr-inm">Silk Wrap Dress</div><div class="cdr-qr"><div class="cdr-qty"><button>−</button><span>1</span><button>+</button></div><div class="cdr-ip">$189</div></div></div></div>
+    <div class="cdr-item"><div class="cdr-thumb"><img src="./shoes1.webp" alt="Pumps" style="width:100%;height:100%;object-fit:cover"/></div><div style="flex:1"><div class="cdr-ict track-lux">SHOES</div><div class="cdr-inm">Patent Leather Pumps</div><div class="cdr-qr"><div class="cdr-qty"><button>−</button><span>1</span><button>+</button></div><div class="cdr-ip">$375</div></div></div></div>
+    <div class="cdr-item"><div class="cdr-thumb"><img src="./accessoire1.webp" alt="Clutch" style="width:100%;height:100%;object-fit:cover"/></div><div style="flex:1"><div class="cdr-ict track-lux">BAGS</div><div class="cdr-inm">Chain-link Evening Clutch</div><div class="cdr-qr"><div class="cdr-qty"><button>−</button><span>1</span><button>+</button></div><div class="cdr-ip">$310</div></div></div></div>
+  </div>
+  <div class="cdr-ft"><div class="cdr-sub"><span class="cdr-sl track-lux">SUBTOTAL</span><span class="cdr-sv">$874</span></div><p class="cdr-note">Taxes and shipping calculated at checkout</p><button class="cdr-b1 track-lux">PROCEED TO CHECKOUT</button><button class="cdr-b2 track-lux" id="cdrX2">CONTINUE SHOPPING</button></div>
+</div>
+
+<script>
+/* TIMER */
+function pad(n){return String(n).padStart(2,'0')}
+function tick(){const now=new Date(),mid=new Date(now);mid.setHours(23,59,59,0);const s=Math.max(0,Math.floor((mid-now)/1000));document.getElementById('hh').textContent=pad(Math.floor(s/3600));document.getElementById('mm').textContent=pad(Math.floor((s%3600)/60));document.getElementById('ss').textContent=pad(s%60)}
+tick();setInterval(tick,1000);
+
+/* GLASSMORPHISM NAV */
+const navbar=document.getElementById('navbar'),announce=document.getElementById('announce');
+window.addEventListener('scroll',()=>{const s=window.scrollY>40;navbar.className=s?'glass':'solid';announce.className=s?'hidden':''},{ passive:true });
+
+/* PAGE ROUTING */
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  // re-trigger animations
+  setTimeout(()=>{
+    document.querySelectorAll('#page-'+id+' .anim').forEach(el=>{el.classList.remove('visible');void el.offsetWidth;observer.observe(el)});
+  },50);
+}
+
+/* CART DRAWER */
+const cbd=document.getElementById('cbd'),cdr=document.getElementById('cdr');
+function openCart(){cbd.classList.add('open');cdr.classList.add('open');document.body.style.overflow='hidden'}
+function closeCart(){cbd.classList.remove('open');cdr.classList.remove('open');document.body.style.overflow=''}
+document.getElementById('cartBtn').addEventListener('click',openCart);
+document.getElementById('cdrX').addEventListener('click',closeCart);
+document.getElementById('cdrX2').addEventListener('click',closeCart);
+cbd.addEventListener('click',closeCart);
+
+/* PRODUCT DETAIL */
+let pdQtyVal=1;
+const SIZES={clothes:['XS','S','M','L','XL'],accessories:['One Size'],shoes:['36','37','38','39','40','41']};
+function openProduct(cat,name,catLabel,img,price,orig,tag,badgeCls){
+  pdQtyVal=1;document.getElementById('pd-qty').textContent=1;
+  document.getElementById('pd-img').src=img;
+  document.getElementById('pd-name').textContent=name;
+  document.getElementById('pd-sub').textContent=catLabel;
+  document.getElementById('pd-bdg').textContent=tag;
+  document.getElementById('pd-bdg').className='pd-bdg '+badgeCls+' track-w';
+  document.getElementById('pd-price').textContent='$'+price;
+  document.getElementById('pd-orig').textContent='$'+orig;
+  const disc=Math.round((1-price/orig)*100);
+  document.getElementById('pd-off').textContent='-'+disc+'% TODAY';
+  document.getElementById('pd-atb').textContent='ADD TO BAG — $'+price;
+  const szRow=document.getElementById('pd-sz-row');
+  szRow.innerHTML='';
+  (SIZES[cat]||['One Size']).forEach((s,i)=>{
+    const b=document.createElement('button');
+    b.className='pd-sz'+(i===0?' active':'');
+    b.textContent=s;
+    b.onclick=()=>{document.querySelectorAll('.pd-sz').forEach(x=>x.classList.remove('active'));b.classList.add('active');};
+    szRow.appendChild(b);
+  });
+  document.getElementById('pd-modal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closePD(){document.getElementById('pd-modal').classList.remove('open');document.body.style.overflow='';}
+function pdQty(d){pdQtyVal=Math.max(1,pdQtyVal+d);document.getElementById('pd-qty').textContent=pdQtyVal;}
+
+/* SIZE BUTTONS in category page */
+document.querySelectorAll('.sz-btn').forEach(b=>{
+  b.addEventListener('click',function(e){
+    e.stopPropagation();
+    const row=this.closest('.sz-row');
+    row.querySelectorAll('.sz-btn').forEach(x=>x.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+/* SCROLL ANIMATIONS */
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target)}});
+},{threshold:.08});
+document.querySelectorAll('.anim').forEach(el=>observer.observe(el));
+</script>
+</body>
 </html>
