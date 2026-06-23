@@ -10,7 +10,7 @@
 /* ── MOBILE LOCKDOWN ── kill all horizontal scroll/overflow ── */
 html,body{width:100%;max-width:100%;overflow-x:hidden}
 html{scroll-behavior:smooth}
-body{font-family:'Inter',system-ui,sans-serif;background:#fff;color:#1C1C1C;position:relative}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--charcoal);color:#1C1C1C;position:relative}
 /* media can never exceed its container */
 img,video,svg{max-width:100%;height:auto}
 :root{--gold:#D4AF37;--gold-lt:#FAF5E1;--gold-md:#E8CC6E;--gold-dk:#9A7A10;--charcoal:#1C1C1C;--muted:#6B6B6B;--cream:#FAF9F6;--border:#F0EBD8}
@@ -54,7 +54,10 @@ img,video,svg{max-width:100%;height:auto}
 .nb-nav a.active{color:var(--charcoal);border-bottom-color:var(--gold)}
 
 /* pages */
-.page{display:none}.page.active{display:block}
+.page{display:none}.page.active{display:block;min-height:100vh}
+/* page backgrounds: home is dark, every other page keeps the light theme */
+#page-home{background:#0f0f0f}
+.page:not(#page-home){background:#fff}
 
 /* HERO */
 /* ── full-screen image-only hero ── */
@@ -269,10 +272,7 @@ body.menu-open #siteHeader{transform:translateY(0)}
   /* freeze parallax layers so hotspots stay locked to the image (no gyro drift) */
   .hub,.hero-welcome-wrap,.frame,.grid-lines{transform:none!important}
   /* corner tags must never block a tap on a hotspot */
-  .ph-badge,.ph-price{pointer-events:none}
-  /* ⚠ TEMP DEBUG: shows each tap-zone so we can align them. REMOVE once aligned. */
-  .hotspot{outline:2px dashed rgba(122,255,170,.95);background:rgba(122,255,170,.18)}
-}
+  .ph-badge,.ph-price{pointer-events:none}}
 .media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.06);opacity:0;transition:opacity 1.1s ease,transform .25s cubic-bezier(.22,1,.36,1);will-change:transform,opacity}
 .media img.loaded{opacity:1}
 .media::before{content:'';position:absolute;inset:0;background:linear-gradient(110deg,#15151b 8%,#20202a 18%,#15151b 33%);background-size:200% 100%;animation:shimmer 1.6s infinite;z-index:0}
