@@ -57,12 +57,60 @@ img,video,svg{max-width:100%;height:auto}
 .page{display:none}.page.active{display:block}
 
 /* HERO */
-.hero{position:relative;overflow:hidden;background:var(--charcoal);min-height:85vh;display:flex;flex-direction:column}
+/* ── full-screen image-only hero ── */
+/* full-bleed, edge-to-edge hero — no frame, no scroll */
+.hero{position:relative;overflow:hidden;background:#0f0f0f;width:100vw;height:100vh;max-width:100%;padding:0}
+/* ── hamburger menu toggle (header is hidden by default) ── */
+.menu-toggle{position:fixed;top:18px;right:20px;z-index:90;width:46px;height:46px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;background:rgba(10,10,12,.5);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(212,175,55,.3);border-radius:11px;cursor:pointer;transition:border-color .3s,background .3s}
+.menu-toggle:hover{border-color:var(--gold);background:rgba(10,10,12,.7)}
+.menu-toggle span{display:block;width:20px;height:1.5px;background:var(--gold-md);transition:transform .35s,opacity .25s}
+body.menu-open .menu-toggle span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+body.menu-open .menu-toggle span:nth-child(2){opacity:0}
+body.menu-open .menu-toggle span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+/* header hidden by default (out of flow → hero fills the top); slides in when open */
+#siteHeader{position:fixed;top:0;left:0;right:0;z-index:80;transform:translateY(-110%);transition:transform .55s cubic-bezier(.22,1,.36,1);box-shadow:0 8px 40px rgba(0,0,0,.25)}
+body.menu-open #siteHeader{transform:translateY(0)}
+/* ── centered welcome overlay (over the core, part of 3D depth) ── */
+.hero-welcome-wrap{position:absolute;inset:0;z-index:4;display:flex;align-items:center;justify-content:center;pointer-events:none;will-change:transform}
+.hero-welcome{text-align:center;text-shadow:0 2px 30px rgba(0,0,0,.7);will-change:transform,opacity}
+.hero-welcome .hw-line{display:block;will-change:transform,opacity}
+.hero-welcome .hw-u{margin-top:2px}
+.hero-welcome .hw-top{display:block;font-size:clamp(10px,1.4vw,14px);letter-spacing:.4em;color:var(--gold-md);font-weight:500;margin-bottom:10px}
+.hero-welcome .hw-main{display:block;font-family:'Cormorant Garamond',serif;font-weight:600;font-size:clamp(34px,5.5vw,72px);line-height:1.0;letter-spacing:.04em;
+  /* gold shimmer sweep: a bright band travels across the clipped text */
+  background:linear-gradient(110deg,#ffffff 0%,#ffffff 34%,#fff7e0 45%,#f5d98a 50%,#fff7e0 55%,#ffffff 66%,#ffffff 100%);
+  background-size:250% 100%;background-position:120% 0;
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;
+  animation:hwShimmer 5.5s ease-in-out 1.6s infinite;will-change:background-position}
+@keyframes hwShimmer{0%{background-position:120% 0}55%,100%{background-position:-40% 0}}
+/* hidden pre-reveal only when GSAP is active (stays visible as a fallback) */
+.gsap-ready #heroWelcome{opacity:0}
+@media(max-width:768px){
+  .hero-welcome .hw-top{letter-spacing:.3em;margin-bottom:7px}
+  .hero-welcome .hw-main{font-size:clamp(28px,8vw,46px);animation-duration:6.5s}  /* calmer on mobile */
+}
+@media(prefers-reduced-motion:reduce){.hero-welcome .hw-main{animation:none}}
+.scroll-cue{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);z-index:3;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:9px;color:var(--gold-md);opacity:.85}
+.scroll-cue .sc-arrow{font-size:18px;line-height:1;animation:cueBounce 1.8s infinite}
+@keyframes cueBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
+/* ── scroll-revealed content section (seamless dark continuation) ── */
+.hero-content{background:linear-gradient(180deg,#0f0f0f,#121118 60%,var(--cream) 160%);padding:80px 24px 90px;position:relative;z-index:1}
+.hc-inner{max-width:720px;margin:0 auto;text-align:center}
+.hero-content .hero-ey{justify-content:center}
+.hero-content h1{font-family:'Cormorant Garamond',serif;font-size:clamp(38px,6vw,68px);font-weight:600;color:#fff;line-height:1.05;margin:14px 0 18px}
+.hero-content h1 em{font-style:italic;background:linear-gradient(110deg,var(--gold-md),var(--gold));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hc-lead{font-size:16px;font-weight:300;color:rgba(255,255,255,.55);line-height:1.75;max-width:480px;margin:0 auto 6px}
+.hero-content .hero-timer{justify-content:center;margin:22px 0 26px}
+.hero-content .cta-row{justify-content:center;margin-bottom:34px}
+.hero-content .trust-row{justify-content:center;border-top:1px solid rgba(255,255,255,.08);padding-top:26px;max-width:560px;margin:0 auto}
+/* GSAP reveal — initial hidden state (kept visible if GSAP fails to load) */
+.gsap-ready .reveal{opacity:0;transform:translateY(40px);will-change:transform,opacity}
 .hero-poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.38) saturate(.6)}
 .hero-s1{position:absolute;inset:0;background:linear-gradient(to right,rgba(28,28,28,.7),rgba(28,28,28,.3),transparent);pointer-events:none}
 .hero-s2{position:absolute;inset:0;background:linear-gradient(to top,rgba(28,28,28,.6),transparent 60%);pointer-events:none}
-.hero-inner{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:60px 40px;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;flex:1}
-@media(max-width:860px){.hero-inner{grid-template-columns:1fr;gap:32px}.nb-main{padding:12px 20px}.hero{min-height:auto}}
+/* split-screen: left copy ~45% · right image ~55% (image dominant) */
+.hero-inner{position:relative;z-index:1;max-width:1240px;margin:0 auto;padding:56px 48px;display:grid;grid-template-columns:1fr 1.15fr;gap:56px;align-items:center;flex:1}
+@media(max-width:860px){.hero-inner{grid-template-columns:1fr;gap:36px;padding:40px 22px}.hero .right{order:-1}.nb-main{padding:12px 20px}.hero{min-height:auto}}
 .hero-ey{font-size:10px;letter-spacing:.2em;color:var(--gold-md);font-weight:500;margin-bottom:18px;display:flex;align-items:center;gap:12px}
 .hero-ey::before{content:'';display:block;width:28px;height:1px;background:var(--gold)}
 .hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(40px,5.5vw,70px);font-weight:600;color:#fff;line-height:1.04;margin-bottom:16px}
@@ -105,6 +153,133 @@ img,video,svg{max-width:100%;height:auto}
 .stat-i:last-child{border:none}
 .stat-v{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;color:#fff}
 .stat-l{font-size:9px;letter-spacing:.16em;color:rgba(255,255,255,.35);margin-top:3px}
+/* ── interactive parallax hero image ── */
+.glow{position:absolute;border-radius:50%;filter:blur(60px);pointer-events:none;z-index:0}
+.glow-a{top:-120px;left:-100px;width:480px;height:480px;background:radial-gradient(circle,rgba(212,175,55,.16),transparent 70%)}
+.glow-b{bottom:-120px;right:-100px;width:520px;height:520px;background:radial-gradient(circle,rgba(212,175,55,.09),transparent 70%)}
+.hero-timer{font-size:11px;color:var(--gold-md);margin:18px 0 22px;display:flex;align-items:center;gap:8px}
+.hero-timer span{font-family:'Cormorant Garamond',serif;font-size:18px;color:#fff;font-variant-numeric:tabular-nums}
+/* right side: large, centered, visually dominant image
+   mobile-first: square (web3.webp 1:1) · desktop override below: wide (web3-pc 2.28:1) */
+/* STAGE: sized to fully COVER the viewport, centered. Holds the image +
+   all overlays so nodes/text crop together with the background (perfect align).
+   Mobile-first ratio = 1/1 (web3.webp square); desktop override below. */
+.scene{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);perspective:1200px;
+  width:max(100vw, 100vh);height:max(100vh, 100vw);max-width:none;margin:0}
+.scene::before{display:none}
+.card{position:relative;width:100%;height:100%;transform-style:preserve-3d;will-change:transform}
+.frame{position:absolute;inset:-12px;border:1px solid rgba(212,175,55,.25);border-radius:18px;transform:translateZ(40px);pointer-events:none;will-change:transform}
+/* gold depth grid — a mid layer that drifts independently */
+.grid-lines{position:absolute;inset:0;z-index:1;border-radius:14px;pointer-events:none;will-change:transform;
+  background-image:linear-gradient(rgba(212,175,55,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(212,175,55,.05) 1px,transparent 1px);
+  background-size:42px 42px;mask:radial-gradient(circle at 50% 50%,#000,transparent 75%);-webkit-mask:radial-gradient(circle at 50% 50%,#000,transparent 75%)}
+.frame::after{content:'';position:absolute;inset:9px;border:1px solid rgba(212,175,55,.12);border-radius:11px}
+/* ════════════════════════════════════════════════════════════════════
+   UNIFIED LIGHT-LUXURY THEME — Gaming · Sport · Sneakers · Mocassins
+   share one card. Cream/white surface · charcoal text · gold accents.
+   Image proportions preserved (1/1 + object-fit:contain + padding).
+   Restyling .gcard here updates ALL sections at once.
+   ════════════════════════════════════════════════════════════════════ */
+.gaming-sec{background:var(--cream);color:var(--charcoal);min-height:100vh;padding:64px 40px 90px}
+.gaming-hero{max-width:1200px;margin:0 auto 40px;text-align:center}
+.gaming-hero .g-ey{font-size:10px;letter-spacing:.22em;color:var(--gold);font-weight:500;margin-bottom:14px}
+.gaming-hero .g-title{font-family:'Cormorant Garamond',serif;font-size:clamp(34px,5vw,56px);font-weight:600;line-height:1.04;color:var(--charcoal)}
+.gaming-hero .g-title em{font-style:italic;color:var(--gold-dk)}
+.gaming-hero .g-lead{font-size:15px;font-weight:300;color:var(--muted);line-height:1.7;max-width:540px;margin:16px auto 0}
+/* responsive grid: 4 cols desktop · 3 · 2 cols on mobile */
+.g-grid{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+@media(max-width:1100px){.g-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:760px){.g-grid{grid-template-columns:repeat(2,1fr);gap:16px}.gaming-sec{padding:48px 16px 70px}}
+/* ── GLOBAL PRODUCT CARD (light luxury, gold glow on hover) ── */
+.gcard{position:relative;border-radius:10px;overflow:hidden;background:#fff;border:1px solid var(--border);transition:transform .4s cubic-bezier(.22,1,.36,1),border-color .4s,box-shadow .4s;display:flex;flex-direction:column;cursor:pointer;text-decoration:none;color:inherit}
+.gcard:hover{transform:translateY(-5px);border-color:var(--gold);box-shadow:0 20px 46px rgba(28,28,28,.10),0 0 30px rgba(212,175,55,.20)}
+/* fixed square frame · contain (no distortion) · padding · centered — KEPT */
+.gcard-media{position:relative;aspect-ratio:1/1;overflow:hidden;background:#F5F4F2;display:flex;align-items:center;justify-content:center;padding:20px}
+.gcard-media img{position:relative;width:100%;height:100%;object-fit:contain;transition:transform .6s ease}
+.gcard:hover .gcard-media img{transform:scale(1.05)}
+.gcard-icon{width:74px;height:74px;stroke:var(--gold);stroke-width:1.1;fill:none;opacity:.8;transition:transform .5s,opacity .4s}
+.gcard:hover .gcard-icon{transform:scale(1.08);opacity:1}
+.gcard-glow{position:absolute;inset:0;opacity:0;background:radial-gradient(circle at 50% 50%,rgba(212,175,55,.14),transparent 60%);transition:opacity .4s;pointer-events:none}
+.gcard:hover .gcard-glow{opacity:1}
+/* elegant gold-outlined badge on cream */
+.gcard-tag{position:absolute;top:12px;left:12px;z-index:2;font-size:8px;letter-spacing:.14em;font-weight:600;padding:5px 10px;border-radius:5px;background:var(--gold-lt);border:1px solid rgba(212,175,55,.6);color:var(--gold-dk)}
+.gcard-body{padding:16px 16px 18px;display:flex;flex-direction:column;flex:1}
+.gcard-cat{font-size:9px;letter-spacing:.18em;color:var(--gold-dk);font-weight:600;margin-bottom:7px}
+.gcard-name{font-size:16px;font-weight:500;color:var(--charcoal);line-height:1.3;margin-bottom:6px;transition:color .2s}
+.gcard:hover .gcard-name{color:var(--gold-dk)}
+.gcard-desc{font-size:12px;font-weight:300;color:var(--muted);line-height:1.6;margin-bottom:16px;flex:1}
+.gcard-foot{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.gcard-price .now{font-size:16px;font-weight:600;color:var(--gold-dk)}
+.gcard-price .was{font-size:12px;color:var(--muted);text-decoration:line-through;margin-left:7px}
+/* ── GLOBAL "ADD TO BAG" button — gold gradient, identical across every section ── */
+.gcard-btn,.gp-add{background:linear-gradient(135deg,var(--gold-md),var(--gold));color:var(--charcoal);border:none;font-family:'Inter',sans-serif;font-size:9px;font-weight:700;letter-spacing:.16em;padding:12px 16px;border-radius:7px;cursor:pointer;transition:transform .25s,box-shadow .25s;white-space:nowrap}
+.gcard-btn:hover,.gp-add:hover{transform:translateY(-1px);box-shadow:0 10px 24px rgba(212,175,55,.35)}
+/* ════ PRODUCT DETAIL PAGE (light luxury) ════ */
+.gp-sec{background:#fff;color:var(--charcoal);min-height:100vh;padding:28px 40px 90px}
+.gp-bc{max-width:1180px;margin:0 auto 28px;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
+.gp-bc button{background:none;border:none;color:var(--muted);cursor:pointer;font-family:inherit;font-size:12px;transition:color .2s}
+.gp-bc button:hover{color:var(--gold-dk)}.gp-bc span{color:var(--gold-md)}.gp-bc .cur{color:var(--charcoal);font-weight:500}
+.gp-wrap{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:start}
+@media(max-width:880px){.gp-wrap{grid-template-columns:1fr;gap:30px}.gp-sec{padding:24px 18px 70px}}
+/* gallery — proportions preserved */
+.gp-main{position:relative;aspect-ratio:1/1;border-radius:12px;overflow:hidden;background:#F5F4F2;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;padding:32px}
+.gp-main img{width:100%;height:100%;object-fit:contain;display:block}
+.gp-tag{position:absolute;top:14px;left:14px;font-size:9px;letter-spacing:.14em;font-weight:600;padding:5px 11px;border-radius:6px;background:var(--gold-lt);border:1px solid rgba(212,175,55,.6);color:var(--gold-dk)}
+.gp-thumbs{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+.gp-thumb{width:80px;height:80px;border-radius:8px;overflow:hidden;border:1px solid var(--border);cursor:pointer;opacity:.7;transition:opacity .25s,border-color .25s;background:#F5F4F2;padding:7px}
+.gp-thumb:hover{opacity:1}.gp-thumb.active{opacity:1;border-color:var(--gold)}
+.gp-thumb img{width:100%;height:100%;object-fit:contain}
+/* info */
+.gp-cat{font-size:9px;letter-spacing:.18em;color:var(--gold-dk);font-weight:600;margin-bottom:10px}
+.gp-name{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,4vw,44px);font-weight:600;line-height:1.06;margin-bottom:12px;color:var(--charcoal)}
+.gp-rating{display:flex;align-items:center;gap:8px;margin-bottom:18px}
+.gp-stars{color:var(--gold);font-size:13px}.gp-revs{font-size:12px;color:var(--muted)}
+.gp-price{display:flex;align-items:baseline;gap:12px;margin-bottom:18px}
+.gp-price .now{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:600;color:var(--gold-dk)}
+.gp-price .was{font-size:16px;color:var(--muted);text-decoration:line-through}
+.gp-price .off{font-size:11px;color:var(--gold-dk);background:var(--gold-lt);border:1px solid rgba(212,175,55,.35);padding:3px 9px;border-radius:5px}
+.gp-desc{font-size:14px;font-weight:300;color:var(--muted);line-height:1.7;margin-bottom:24px}
+.gp-specs-h{font-size:9px;letter-spacing:.16em;color:var(--gold-dk);font-weight:600;margin-bottom:12px;padding-top:20px;border-top:1px solid var(--border)}
+.gp-specs{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:10px 18px;margin-bottom:28px}
+@media(max-width:480px){.gp-specs{grid-template-columns:1fr}}
+.gp-specs li{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--charcoal)}
+.gp-specs li::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--gold);flex-shrink:0}
+.gp-buy{display:flex;gap:12px;align-items:stretch;margin-bottom:18px}
+.gp-qty{display:flex;align-items:center;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.gp-qty button{width:42px;background:none;border:none;color:var(--charcoal);font-size:18px;cursor:pointer;transition:background .2s}
+.gp-qty button:hover{background:var(--gold-lt)}
+.gp-qty span{width:42px;text-align:center;font-size:15px;font-weight:500}
+.gp-add{flex:1;padding:16px;font-size:11px;letter-spacing:.18em}
+.gp-trust{display:flex;flex-wrap:wrap;gap:16px;font-size:11px;color:var(--muted)}
+.media{position:relative;width:100%;height:100%;overflow:hidden;background:#0f0f0f}
+/* frame & drawn grid removed for the edge-to-edge look */
+.frame,.grid-lines{display:none!important}
+/* desktop (≥769px): wide landscape image (web3-pc.webp 1893×831) — cover the viewport */
+@media(min-width:769px){
+  .scene{width:max(100vw, calc(100vh * 1893/831));height:max(100vh, calc(100vw * 831/1893))}
+}
+.media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.06);opacity:0;transition:opacity 1.1s ease,transform .25s cubic-bezier(.22,1,.36,1);will-change:transform,opacity}
+.media img.loaded{opacity:1}
+.media::before{content:'';position:absolute;inset:0;background:linear-gradient(110deg,#15151b 8%,#20202a 18%,#15151b 33%);background-size:200% 100%;animation:shimmer 1.6s infinite;z-index:0}
+.media.ready::before{display:none}
+@keyframes shimmer{to{background-position:-200% 0}}
+.sheen{position:absolute;inset:0;border-radius:14px;pointer-events:none;z-index:2;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.16),transparent 45%);mix-blend-mode:overlay;opacity:0;transition:opacity .4s}
+.scene:hover .sheen{opacity:1}
+/* ── interactive category hub: clickable hotspots over the baked artwork ── */
+.hub{position:absolute;inset:0;z-index:3;pointer-events:none}
+.hotspot{position:absolute;transform:translate(-50%,-50%);aspect-ratio:1;pointer-events:auto;cursor:pointer;background:none;border:none;padding:0}
+.hotspot .ring{position:absolute;inset:0;border-radius:50%;border:2px solid transparent;transition:transform .35s cubic-bezier(.22,1,.36,1),border-color .35s,box-shadow .35s}
+.hotspot .pulse{position:absolute;inset:0;border-radius:50%;border:1px solid rgba(212,175,55,.45);pointer-events:none}
+.hotspot:hover .ring{border-color:var(--gold);transform:scale(1.08);box-shadow:0 0 34px rgba(212,175,55,.55),inset 0 0 22px rgba(212,175,55,.22)}
+.hotspot .price{position:absolute;left:50%;bottom:-30px;transform:translateX(-50%) translateY(8px);opacity:0;background:rgba(10,10,12,.9);border:1px solid var(--gold);color:var(--gold-md);font-size:9px;letter-spacing:.12em;font-family:'Inter',sans-serif;padding:5px 10px;border-radius:6px;white-space:nowrap;transition:opacity .3s,transform .3s;pointer-events:none}
+.hotspot:hover .price{opacity:1;transform:translateX(-50%) translateY(0)}
+.hotspot .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.ph-badge{position:absolute;top:16px;left:16px;z-index:4;transform:translateZ(70px);background:rgba(10,10,12,.6);backdrop-filter:blur(10px);border:1px solid rgba(212,175,55,.25);color:var(--gold-md);font-size:9px;padding:7px 13px;border-radius:6px}
+.ph-price{position:absolute;bottom:16px;right:16px;z-index:3;transform:translateZ(60px);background:rgba(10,10,12,.55);backdrop-filter:blur(10px);border:1px solid rgba(212,175,55,.25);border-radius:9px;padding:10px 14px}
+.ph-price .s{font-size:9px;color:rgba(255,255,255,.5)}.ph-price .p{font-family:'Cormorant Garamond',serif;font-size:20px;color:#fff;line-height:1}
+.motion-btn{position:absolute;bottom:-44px;left:50%;transform:translateX(-50%);z-index:5;display:none;background:rgba(212,175,55,.14);border:1px solid var(--gold);color:var(--gold-md);font-size:10px;letter-spacing:.12em;padding:9px 16px;border-radius:100px;cursor:pointer;font-family:inherit}
+/* mobile/tablet (≤768px): square image — bold, near-full-width, height-capped */
+/* mobile keeps the square cover stage from the base .scene rule (no override needed) */
 
 /* promo strip */
 .ps{background:var(--charcoal);padding:16px 40px}
@@ -294,10 +469,19 @@ img,video,svg{max-width:100%;height:auto}
 #pd-modal.open{display:flex}
 .pd-bd{position:absolute;inset:0;background:rgba(28,28,28,.5)}
 .pd-panel{position:relative;background:#fff;width:100%;max-width:820px;margin:0 auto;max-height:90vh;overflow-y:auto;display:grid;grid-template-columns:1fr 1fr}
-@media(max-width:640px){.pd-panel{grid-template-columns:1fr;max-height:95vh}}
-.pd-img{position:relative}
-.pd-img img{width:100%;height:100%;object-fit:cover;display:block}
-.pd-bdg{position:absolute;top:14px;left:14px;font-size:9px;font-family:'Inter',sans-serif;font-weight:500;letter-spacing:.1em;padding:4px 9px}
+@media(max-width:640px){.pd-panel{grid-template-columns:1fr;max-height:95vh}.pd-main img{min-height:300px}.pd-thumb{width:52px;height:64px}}
+.pd-img{position:relative;display:flex;flex-direction:column;background:#F5F4F2}
+.pd-main{position:relative;flex:1;min-height:0;overflow:hidden}
+.pd-main img{width:100%;height:100%;object-fit:cover;display:block;min-height:400px}
+/* thumbnail strip */
+.pd-thumbs{display:flex;gap:8px;padding:10px 12px;background:#fff;overflow-x:auto;scrollbar-width:none}
+.pd-thumbs:empty{display:none}
+.pd-thumbs::-webkit-scrollbar{display:none}
+.pd-thumb{width:58px;height:72px;flex-shrink:0;padding:0;border:1px solid var(--border);background:#F5F4F2;cursor:pointer;overflow:hidden;transition:border-color .25s,opacity .25s;opacity:.7}
+.pd-thumb:hover{opacity:1}
+.pd-thumb.active{border-color:var(--gold);opacity:1}
+.pd-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.pd-bdg{position:absolute;top:14px;left:14px;z-index:2;font-size:9px;font-family:'Inter',sans-serif;font-weight:500;letter-spacing:.1em;padding:4px 9px}
 .pd-crumb{grid-column:1/-1;position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:12px;background:rgba(255,255,255,.9);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--gold-lt);padding:11px 48px 11px 22px}
 .pd-back{display:flex;align-items:center;gap:8px;background:none;border:none;cursor:pointer;font-family:inherit;font-size:10px;letter-spacing:.18em;color:var(--charcoal);transition:color .2s}
 .pd-back:hover{color:var(--gold-dk)}.pd-back svg{width:13px;height:13px;stroke:currentColor;stroke-width:1.8;fill:none;transition:transform .3s}.pd-back:hover svg{transform:translateX(-3px)}
@@ -377,6 +561,14 @@ img,video,svg{max-width:100%;height:auto}
 .cdr-b2:hover{border-color:var(--gold);color:var(--gold-dk)}
 
 /* footer */
+/* minimal gateway footer */
+.ft-min{background:var(--charcoal);padding:48px 24px;text-align:center}
+.ft-min-in{max-width:600px;margin:0 auto}
+.ft-min-logo{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;color:#fff;letter-spacing:.12em}
+.ft-min-logo span{color:var(--gold)}
+.ft-min-sub{font-size:9px;letter-spacing:.2em;color:var(--gold);font-weight:500;margin-top:3px}
+.ft-min-line{width:60px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:20px auto}
+.ft-min-copy{font-size:10px;letter-spacing:.06em;color:rgba(255,255,255,.3)}
 footer{background:var(--charcoal);color:rgba(255,255,255,.4);padding:52px 40px 26px}
 .ft-in{max-width:1200px;margin:0 auto}
 .ft-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:44px}
@@ -461,9 +653,18 @@ footer{background:var(--charcoal);color:rgba(255,255,255,.4);padding:52px 40px 2
   body{font-size:14px}
 }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 </head>
 <body>
 
+<!-- Discreet hamburger — opens the hidden header/navigation -->
+<button id="menuToggle" class="menu-toggle" aria-label="Open menu" onclick="toggleMenu()">
+  <span></span><span></span><span></span>
+</button>
+
+<!-- Header is hidden by default; slides in when the menu is opened -->
+<div id="siteHeader">
 <div id="announce">COMPLIMENTARY SHIPPING ON ORDERS OVER $150 · USE CODE <span>CHMICHA20</span></div>
 
 <!-- NAVBAR -->
@@ -489,123 +690,47 @@ footer{background:var(--charcoal);color:rgba(255,255,255,.4);padding:52px 40px 2
     <li><a href="#">SALE</a></li><li><a href="#">DESIGNERS</a></li><li><a href="#">GIFT EDIT</a></li>
   </ul></nav>
 </div>
+</div><!-- /#siteHeader -->
 
 <!-- ═══ HOME PAGE ═══ -->
 <div id="page-home" class="page active">
 
-<!-- HERO -->
-<section class="hero">
-  <img class="hero-poster" src="https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=1600&q=70" alt=""/>
-  <div class="hero-s1"></div><div class="hero-s2"></div>
-  <div class="hero-inner">
-    <div class="anim left" style="transition-delay:100ms">
-      <p class="hero-ey track-lux">PRIVATE SALE · LIMITED TIME</p>
-      <h1>The Art of<br/><em>Dressing Well.</em></h1>
-      <p>Curated pieces for the discerning wardrobe. Up to 40% off our most coveted styles — today only.</p>
-      <div class="cta-row">
-        <button class="btn-gold track-lux" onclick="showPage('clothes')">SHOP THE EDIT</button>
-        <button class="btn-gw track-lux">VIEW LOOKBOOK</button>
-      </div>
-      <div class="trust-row">
-        <div class="ti"><div class="ti-r"></div><div><div class="ti-t track-w">Complimentary</div><div class="ti-s">Shipping & Returns</div></div></div>
-        <div class="ti"><div class="ti-r"></div><div><div class="ti-t track-w">Authenticity</div><div class="ti-s">Guaranteed</div></div></div>
-        <div class="ti"><div class="ti-r"></div><div><div class="ti-t track-w">White Glove</div><div class="ti-s">Packaging</div></div></div>
+<!-- HERO — full-screen interactive image only -->
+<section class="hero" id="hero">
+  <div class="glow glow-a"></div><div class="glow glow-b"></div>
+  <div class="scene" id="scene">
+    <div class="card" id="card">
+      <!-- depth layers: each moves at its own rate via data-depth -->
+      <div class="frame" data-depth="1.4"></div>
+      <div class="grid-lines" data-depth="0.5"></div>
+      <div class="media" id="media">
+        <!-- Responsive art-direction: browser downloads ONLY the matching image.
+             Desktop (≥769px) → web3-pc.webp · Mobile (≤768px) → web3.webp -->
+        <picture>
+          <source srcset="./web3-pc.webp" media="(min-width:769px)"/>
+          <img id="heroImg" src="./web3.webp" alt="Chmicha luxury fashion editorial" decoding="async" data-depth="0.25"/>
+        </picture>
+        <div class="sheen" id="sheen"></div>
+        <!-- Centered welcome overlay — part of the image's 3D depth (parallax via wrapper) -->
+        <div class="hero-welcome-wrap" data-depth="2.0">
+          <div class="hero-welcome" id="heroWelcome">
+            <span class="hw-line hw-top track-lux">WELCOME TO</span>      <!-- enters from RIGHT -->
+            <span class="hw-line hw-main hw-c">CHMICHA</span>             <!-- enters from LEFT  -->
+            <span class="hw-line hw-main hw-u">UNIVERSE</span>            <!-- enters from RIGHT -->
+          </div>
+        </div>
+        <!-- Interactive category hub (center core + active category nodes) -->
+        <div class="hub" id="hub" data-depth="1.1"></div>
+        <!-- hotspots are generated by JS and positioned over the baked artwork nodes -->
+        <span class="ph-badge track-lux" data-depth="2.2">NEW SEASON ’26</span>
+        <div class="ph-price" data-depth="1.8"><div class="s track-w">FROM</div><div class="p">€285</div></div>
       </div>
     </div>
-    <div class="anim right" style="transition-delay:300ms;display:flex;justify-content:flex-end">
-      <div class="sale-card">
-        <div class="dv-row"><div class="dv-line"></div><span class="dv-txt track-lux">SALE CLOSES IN</span><div class="dv-line"></div></div>
-        <div class="timer-w"><div class="t-u"><div class="t-n" id="hh">--</div><div class="t-l">HRS</div></div><span class="t-s">·</span><div class="t-u"><div class="t-n" id="mm">--</div><div class="t-l">MIN</div></div><span class="t-s">·</span><div class="t-u"><div class="t-n" id="ss">--</div><div class="t-l">SEC</div></div></div>
-        <div class="cd"></div>
-        <p class="stk-hd track-lux">SELLING QUICKLY</p>
-        <div class="stk-r"><div class="stk-hr"><span class="stk-nm">Silk Evening Dress</span><span class="stk-p track-w">82% CLAIMED</span></div><div class="bar-t"><div class="bar-f" style="width:82%"></div></div></div>
-        <div class="stk-r"><div class="stk-hr"><span class="stk-nm">Patent Leather Heels</span><span class="stk-p track-w">91% CLAIMED</span></div><div class="bar-t"><div class="bar-f" style="width:91%"></div></div></div>
-        <div class="stk-r"><div class="stk-hr"><span class="stk-nm">Cashmere Trench Coat</span><span class="stk-p track-w">67% CLAIMED</span></div><div class="bar-t"><div class="bar-f" style="width:67%"></div></div></div>
-        <div class="cd"></div>
-        <div class="promo-r2"><div class="promo-l2 track-lux">EXCLUSIVE OFFER<strong>Extra 20% off with code</strong></div><div class="promo-c2 track-w">CHMICHA20</div></div>
-      </div>
-    </div>
+    <button class="motion-btn" id="motionBtn">↻ ENABLE MOTION</button>
   </div>
-  <div class="stats-s"><div class="stats-in"><div class="stat-i"><div class="stat-v">12,000+</div><div class="stat-l track-lux">CURATED PIECES</div></div><div class="stat-i"><div class="stat-v">142</div><div class="stat-l track-lux">DESIGNER LABELS</div></div><div class="stat-i"><div class="stat-v">4.9 ★</div><div class="stat-l track-lux">CUSTOMER RATING</div></div></div></div>
+  <div class="scroll-cue track-lux" id="scrollCue">SCROLL<span class="sc-arrow">⌄</span></div>
 </section>
 
-<!-- PROMO STRIP -->
-<div class="ps anim up"><div class="ps-in">
-  <div class="ps-i"><span class="ps-ic">✦</span><div><div class="ps-t track-w">Complimentary Shipping</div><div class="ps-s">On all orders over $150</div></div></div>
-  <div class="ps-i"><span class="ps-ic">✦</span><div><div class="ps-t track-w">Effortless Returns</div><div class="ps-s">30-day free returns</div></div></div>
-  <div class="ps-i"><span class="ps-ic">✦</span><div><div class="ps-t track-w">Authenticity Assured</div><div class="ps-s">100% genuine pieces</div></div></div>
-  <div class="ps-i"><span class="ps-ic">✦</span><div><div class="ps-t track-w">Private Client Service</div><div class="ps-s">Dedicated styling advisors</div></div></div>
-</div></div>
-
-<!-- CATEGORIES with real images -->
-<div class="cat-sec"><div class="sec-in">
-  <div class="sec-hd anim up"><div><p class="sec-ey track-lux">COLLECTIONS</p><h2 class="sec-t">Shop by Category</h2></div><button class="va track-lux" onclick="showPage('clothes')">VIEW ALL</button></div>
-  <div class="cat-grid">
-    <button class="cat-card anim left" onclick="showPage('clothes')" style="transition-delay:0ms">
-      <div class="cat-img-wrap"><img src="./clothes.webp" alt="Clothes"/><div class="cat-ov"></div><div class="cat-cta-w"><span class="cat-cta-b track-lux">EXPLORE NOW</span></div></div>
-      <div class="cat-lbl"><div class="cat-lt"><div><div class="cat-n">Clothes</div><div class="cat-sb">Ready-to-Wear</div></div><svg class="cat-arr" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></div><div class="cat-cnt track-lux">2,400+ PIECES</div><div class="cat-rl"></div></div>
-    </button>
-    <button class="cat-card anim up" onclick="showPage('accessories')" style="transition-delay:120ms">
-      <div class="cat-img-wrap"><img src="./accessoire.webp" alt="Accessories"/><div class="cat-ov"></div><div class="cat-cta-w"><span class="cat-cta-b track-lux">EXPLORE NOW</span></div></div>
-      <div class="cat-lbl"><div class="cat-lt"><div><div class="cat-n">Accessories</div><div class="cat-sb">The Details</div></div><svg class="cat-arr" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></div><div class="cat-cnt track-lux">1,800+ PIECES</div><div class="cat-rl"></div></div>
-    </button>
-    <button class="cat-card anim right" onclick="showPage('shoes')" style="transition-delay:240ms">
-      <div class="cat-img-wrap"><img src="./shoes.webp" alt="Shoes"/><div class="cat-ov"></div><div class="cat-cta-w"><span class="cat-cta-b track-lux">EXPLORE NOW</span></div></div>
-      <div class="cat-lbl"><div class="cat-lt"><div><div class="cat-n">Shoes</div><div class="cat-sb">Fine Footwear</div></div><svg class="cat-arr" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></div><div class="cat-cnt track-lux">950+ PIECES</div><div class="cat-rl"></div></div>
-    </button>
-  </div>
-</div></div>
-
-<!-- FEATURED PRODUCTS placeholder -->
-<div class="prod-sec"><div class="sec-in">
-  <div class="sec-hd anim up"><div><p class="sec-ey track-lux">PRIVATE SALE</p><h2 class="sec-t">Featured Pieces</h2></div><div style="text-align:right"><button class="va track-lux" onclick="showPage('clothes')">VIEW ALL</button><div style="font-size:10px;color:var(--muted);margin-top:4px">Sale ends tonight</div></div></div>
-  <div class="prod-grid">
-    <div class="pc anim up" style="transition-delay:0ms" onclick="openProduct('clothes','Silk Wrap Dress','DRESSES','./clothes1.webp',189,315,'EXCLUSIVE DROP','bdg-e')"><div class="pc-img"><img src="./clothes1.webp" alt="Silk Wrap Dress" style="width:100%;height:100%;object-fit:cover"/><span class="pc-bdg bdg-e track-w">EXCLUSIVE</span><span class="pc-disc track-w">-40%</span><div class="pc-add track-lux">ADD TO BAG</div></div><div class="pc-cat track-lux">DRESSES</div><div class="pc-name">Silk Wrap Dress</div><div><span class="pc-stars">★★★★★</span><span class="pc-revs">(214)</span></div><div class="pc-pr"><span class="pc-price">$189</span><span class="pc-orig">$315</span><span class="pc-save">Save $126</span></div></div>
-    <div class="pc anim up" style="transition-delay:70ms" onclick="openProduct('shoes','Patent Leather Pumps','SHOES','./shoes1.webp',375,620,'BESTSELLER','bdg-b')"><div class="pc-img"><img src="./shoes1.webp" alt="Patent Leather Pumps" style="width:100%;height:100%;object-fit:cover"/><span class="pc-bdg bdg-b track-w">BESTSELLER</span><span class="pc-disc track-w">-40%</span><div class="pc-add track-lux">ADD TO BAG</div></div><div class="pc-cat track-lux">SHOES</div><div class="pc-name">Patent Leather Pumps</div><div><span class="pc-stars">★★★★★</span><span class="pc-revs">(178)</span></div><div class="pc-pr"><span class="pc-price">$375</span><span class="pc-orig">$620</span><span class="pc-save">Save $245</span></div></div>
-    <div class="pc anim up" style="transition-delay:140ms" onclick="openProduct('accessories','Chain-link Clutch','BAGS','./accessoire1.webp',310,520,'LIMITED EDITION','bdg-e')"><div class="pc-img"><img src="./accessoire1.webp" alt="Chain-link Clutch" style="width:100%;height:100%;object-fit:cover"/><span class="pc-bdg bdg-e track-w">LIMITED</span><span class="pc-disc track-w">-40%</span><div class="pc-add track-lux">ADD TO BAG</div></div><div class="pc-cat track-lux">BAGS</div><div class="pc-name">Chain-link Clutch</div><div><span class="pc-stars">★★★★★</span><span class="pc-revs">(133)</span></div><div class="pc-pr"><span class="pc-price">$310</span><span class="pc-orig">$520</span><span class="pc-save">Save $210</span></div></div>
-    <div class="pc anim up" style="transition-delay:210ms" onclick="openProduct('clothes','Tailored Linen Blazer','OUTERWEAR','./clothes2.webp',420,700,'FAST SELLING','bdg-b')"><div class="pc-img"><img src="./clothes2.webp" alt="Tailored Linen Blazer" style="width:100%;height:100%;object-fit:cover"/><span class="pc-bdg bdg-b track-w">FAST SELLING</span><span class="pc-disc track-w">-40%</span><div class="pc-add track-lux">ADD TO BAG</div></div><div class="pc-cat track-lux">OUTERWEAR</div><div class="pc-name">Tailored Linen Blazer</div><div><span class="pc-stars">★★★★★</span><span class="pc-revs">(89)</span></div><div class="pc-pr"><span class="pc-price">$420</span><span class="pc-orig">$700</span><span class="pc-save">Save $280</span></div></div>
-    <div class="pc anim up" style="transition-delay:280ms" onclick="openProduct('accessories','Silk Twill Carré','SCARVES','./accessoire2.webp',195,320,'FAST SELLING','bdg-b')"><div class="pc-img"><img src="./accessoire2.webp" alt="Silk Twill Carré" style="width:100%;height:100%;object-fit:cover"/><span class="pc-bdg bdg-b track-w">FAST SELLING</span><span class="pc-disc track-w">-39%</span><div class="pc-add track-lux">ADD TO BAG</div></div><div class="pc-cat track-lux">SCARVES</div><div class="pc-name">Silk Twill Carré</div><div><span class="pc-stars">★★★★★</span><span class="pc-revs">(302)</span></div><div class="pc-pr"><span class="pc-price">$195</span><span class="pc-orig">$320</span><span class="pc-save">Save $125</span></div></div>
-    <div class="pc anim up" style="transition-delay:350ms" onclick="openProduct('shoes','Suede Block-Heel Mules','SHOES','./shoes2.webp',295,490,'EXCLUSIVE DROP','bdg-e')"><div class="pc-img"><img src="./shoes2.webp" alt="Suede Block-Heel Mules" style="width:100%;height:100%;object-fit:cover"/><span class="pc-bdg bdg-e track-w">EXCLUSIVE</span><span class="pc-disc track-w">-40%</span><div class="pc-add track-lux">ADD TO BAG</div></div><div class="pc-cat track-lux">SHOES</div><div class="pc-name">Suede Block-Heel Mules</div><div><span class="pc-stars">★★★★★</span><span class="pc-revs">(256)</span></div><div class="pc-pr"><span class="pc-price">$295</span><span class="pc-orig">$490</span><span class="pc-save">Save $195</span></div></div>
-  </div>
-</div></div>
-
-<!-- DESIGNER BOUTIQUE -->
-<div class="db-sec"><div class="sec-in">
-  <div class="db-grid">
-    <div class="anim left"><div class="db-img-wrap"><img src="./marketplace.webp" alt="Chmicha Designer Boutique - Luxury Marketplace" loading="lazy"/></div></div>
-    <div class="anim right" style="transition-delay:120ms">
-      <p class="db-ey track-lux">THE DESIGNER BOUTIQUE</p>
-      <h2 class="db-h2">Where independent<br/>ateliers find you.</h2>
-      <p class="db-p">A curated home for the world's most exciting independent designers and boutique houses. Discover rare, limited-run pieces you won't find anywhere else — each one vetted by the CHMICHA atelier team.</p>
-      <ul class="db-list">
-        <li><svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Vetted independent ateliers</li>
-        <li><svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Authenticity guaranteed on every piece</li>
-        <li><svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Limited-run &amp; one-of-a-kind designs</li>
-      </ul>
-      <div class="db-cta">
-        <button class="db-b1 track-lux">EXPLORE THE BOUTIQUE</button>
-        <button class="db-b2 track-lux">BECOME A SELLER</button>
-      </div>
-    </div>
-  </div>
-</div></div>
-
-<!-- EDITORIAL -->
-<div class="ed-sec"><div class="sec-in">
-  <div class="sec-hd anim up"><div><p class="sec-ey track-lux">EDITORIAL</p><h2 class="sec-t">The Journal</h2></div><a href="#" class="va track-lux">ALL STORIES</a></div>
-  <div class="ed-grid">
-    <div class="ed-lg anim left">
-      <div class="ed-lg-img" style="min-height:420px;position:relative;overflow:hidden"><img src="./journal.webp" alt="Power Dressing Reborn" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"/><span class="ed-tag-lbl track-lux" style="z-index:1">THE EDIT</span></div>
-      <div style="padding-top:18px"><div class="ed-ey"><span class="track-lux">THE EDIT</span></div><h3 class="ed-title">Power Dressing<br/>Reborn</h3><p class="ed-exc">The modern wardrobe demands versatility without compromise. We explore how tailoring has evolved into the ultimate expression of quiet confidence.</p><a href="#" class="ed-rd track-lux">READ MORE <svg style="width:12px;height:12px;stroke:currentColor;stroke-width:2;fill:none;display:inline" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></a></div>
-    </div>
-    <div class="ed-sp">
-      <div class="anim right" style="transition-delay:150ms"><div class="ed-sm"><div class="ed-sm-img" style="width:150px;aspect-ratio:1;position:relative;flex-shrink:0;overflow:hidden"><img src="./journal1.webp" alt="The New Minimalism" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"/><span class="ed-tag-lbl track-lux" style="z-index:1">STYLE FILE</span></div><div style="padding:4px 0"><div class="ed-ey"><span class="track-lux">STYLE FILE</span></div><h3 class="ed-sm-t">The New Minimalism</h3><p class="ed-sm-exc">Less, but infinitely better. How the capsule wardrobe concept is reshaping what we buy and why.</p><a href="#" class="ed-rd track-lux">READ MORE</a></div></div></div>
-      <div class="ed-dv"></div>
-      <div class="anim right" style="transition-delay:300ms"><div class="ed-sm"><div class="ed-sm-img" style="width:150px;aspect-ratio:1;position:relative;flex-shrink:0;overflow:hidden"><img src="./journal2.webp" alt="Craft & Provenance" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"/><span class="ed-tag-lbl track-lux" style="z-index:1">BEHIND THE LABEL</span></div><div style="padding:4px 0"><div class="ed-ey"><span class="track-lux">BEHIND THE LABEL</span></div><h3 class="ed-sm-t">Craft & Provenance</h3><p class="ed-sm-exc">We visit the ateliers of three emerging designers redefining luxury through artisanal technique.</p><a href="#" class="ed-rd track-lux">READ MORE</a></div></div></div>
-    </div>
-  </div>
-  <div class="ed-qt anim up" style="transition-delay:100ms"><p class="ed-q-t">Style is a way to say who you are without having to speak.</p><p class="ed-q-a track-lux">— RACHEL ZOE</p><div class="nl-r"><input class="nl-in" type="email" placeholder="Your email address"/><button class="nl-btn track-lux">JOIN THE INNER CIRCLE</button></div><p class="nl-note">Exclusive previews, private sales, and editorial content.</p></div>
-</div></div>
 
 </div><!-- /page-home -->
 
@@ -616,7 +741,7 @@ footer{background:var(--charcoal);color:rgba(255,255,255,.4);padding:52px 40px 2
   <div class="cp-hero"><div class="cp-hero-in"><p class="cp-ey track-lux">READY-TO-WEAR</p><h1 class="cp-h1">Clothes</h1><p class="cp-desc">Effortless elegance for the modern wardrobe. Each piece is crafted to move with you through every occasion.</p></div></div>
   <div class="cp-filters"><div class="cp-fil-in"><div class="fil-tags"><button class="fil-tag track-w">ALL</button><button class="fil-tag track-w">NEW IN</button><button class="fil-tag track-w">UNDER $300</button><button class="fil-tag track-w">SALE</button></div><button class="sort-btn track-w">SORT: FEATURED <svg style="width:11px;height:11px;stroke:currentColor;stroke-width:2;fill:none;display:inline;vertical-align:middle" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></button></div></div>
   <div class="cp-grid-wrap">
-    <div class="cp-grid two-col">
+    <div class="cp-grid three-col">
       <div class="cpcard anim up" style="transition-delay:0ms" onclick="openProduct('clothes','Fluid Silk Wrap Dress','DRESSES','./clothes1.webp',285,475,'EXCLUSIVE DROP','bdg-e')">
         <div class="cpcard-img"><img src="./clothes1.webp" alt="Silk Wrap Dress"/><div class="cpcard-ov"></div><span class="cpcard-bdg bdg-e track-w">EXCLUSIVE DROP</span><span class="cpcard-disc track-w">-40%</span><div class="cpcard-sizes"><p class="cpcard-sizes-lbl track-lux">SELECT SIZE</p><div class="sz-row"><button class="sz-btn">XS</button><button class="sz-btn">S</button><button class="sz-btn active">M</button><button class="sz-btn">L</button><button class="sz-btn">XL</button></div></div><button class="cpcard-wish"><svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg></button></div>
         <div class="cpcard-cat track-lux">DRESSES</div><div class="cpcard-name">Fluid Silk Wrap Dress</div><div class="cpcard-sub">In Ivory & Champagne</div><div><span class="cpcard-stars">★★★★★</span><span class="cpcard-revs">(214)</span></div>
@@ -627,6 +752,34 @@ footer{background:var(--charcoal);color:rgba(255,255,255,.4);padding:52px 40px 2
         <div class="cpcard-img"><img src="./clothes2.webp" alt="Linen Blazer"/><div class="cpcard-ov"></div><span class="cpcard-bdg bdg-b track-w">FAST SELLING</span><span class="cpcard-disc track-w">-39%</span><div class="cpcard-sizes"><p class="cpcard-sizes-lbl track-lux">SELECT SIZE</p><div class="sz-row"><button class="sz-btn">XS</button><button class="sz-btn">S</button><button class="sz-btn">M</button><button class="sz-btn">L</button></div></div><button class="cpcard-wish"><svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg></button></div>
         <div class="cpcard-cat track-lux">OUTERWEAR</div><div class="cpcard-name">Tailored Linen Blazer</div><div class="cpcard-sub">In Warm Stone</div><div><span class="cpcard-stars">★★★★★</span><span class="cpcard-revs">(89)</span></div>
         <div class="cpcard-pr" style="margin:8px 0"><span class="cpcard-price">$420</span><span class="cpcard-orig">$690</span><span class="cpcard-save">Save $270</span></div>
+        <button class="cpcard-btn track-lux">ADD TO BAG</button>
+      </div>
+
+      <div class="cpcard anim up" style="transition-delay:0ms" onclick="openProduct('clothes','Cashmere Knit Sweater','KNITWEAR','./clothes3.1.webp',245,390,'NEW IN','bdg-b')">
+        <div class="cpcard-img"><img src="./clothes3.1.webp" alt="Cashmere Knit Sweater"/><div class="cpcard-ov"></div><span class="cpcard-bdg bdg-b track-w">NEW IN</span><span class="cpcard-disc track-w">-37%</span><div class="cpcard-sizes"><p class="cpcard-sizes-lbl track-lux">SELECT SIZE</p><div class="sz-row"><button class="sz-btn">XS</button><button class="sz-btn">S</button><button class="sz-btn active">M</button><button class="sz-btn">L</button><button class="sz-btn">XL</button></div></div><button class="cpcard-wish"><svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg></button></div>
+        <div class="cpcard-cat track-lux">KNITWEAR</div><div class="cpcard-name">Cashmere Knit Sweater</div><div class="cpcard-sub">In Oatmeal Melange</div><div><span class="cpcard-stars">★★★★★</span><span class="cpcard-revs">(167)</span></div>
+        <div class="cpcard-pr" style="margin:8px 0"><span class="cpcard-price">$245</span><span class="cpcard-orig">$390</span><span class="cpcard-save">Save $145</span></div>
+        <button class="cpcard-btn track-lux">ADD TO BAG</button>
+      </div>
+
+      <div class="cpcard anim up" style="transition-delay:120ms" onclick="openProduct('clothes','Belted Wool Coat','OUTERWEAR','./clothes4.1.webp',520,820,'EXCLUSIVE DROP','bdg-e')">
+        <div class="cpcard-img"><img src="./clothes4.1.webp" alt="Belted Wool Coat"/><div class="cpcard-ov"></div><span class="cpcard-bdg bdg-e track-w">EXCLUSIVE DROP</span><span class="cpcard-disc track-w">-37%</span><div class="cpcard-sizes"><p class="cpcard-sizes-lbl track-lux">SELECT SIZE</p><div class="sz-row"><button class="sz-btn">XS</button><button class="sz-btn">S</button><button class="sz-btn active">M</button><button class="sz-btn">L</button></div></div><button class="cpcard-wish"><svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg></button></div>
+        <div class="cpcard-cat track-lux">OUTERWEAR</div><div class="cpcard-name">Belted Wool Coat</div><div class="cpcard-sub">In Camel</div><div><span class="cpcard-stars">★★★★★</span><span class="cpcard-revs">(94)</span></div>
+        <div class="cpcard-pr" style="margin:8px 0"><span class="cpcard-price">$520</span><span class="cpcard-orig">$820</span><span class="cpcard-save">Save $300</span></div>
+        <button class="cpcard-btn track-lux">ADD TO BAG</button>
+      </div>
+
+      <div class="cpcard anim up" style="transition-delay:0ms" onclick="openProduct('clothes','Pleated Midi Skirt','SKIRTS','./clothes5.1.webp',215,340,'FAST SELLING','bdg-b')">
+        <div class="cpcard-img"><img src="./clothes5.1.webp" alt="Pleated Midi Skirt"/><div class="cpcard-ov"></div><span class="cpcard-bdg bdg-b track-w">FAST SELLING</span><span class="cpcard-disc track-w">-37%</span><div class="cpcard-sizes"><p class="cpcard-sizes-lbl track-lux">SELECT SIZE</p><div class="sz-row"><button class="sz-btn">XS</button><button class="sz-btn active">S</button><button class="sz-btn">M</button><button class="sz-btn">L</button><button class="sz-btn">XL</button></div></div><button class="cpcard-wish"><svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg></button></div>
+        <div class="cpcard-cat track-lux">SKIRTS</div><div class="cpcard-name">Pleated Midi Skirt</div><div class="cpcard-sub">In Champagne</div><div><span class="cpcard-stars">★★★★★</span><span class="cpcard-revs">(208)</span></div>
+        <div class="cpcard-pr" style="margin:8px 0"><span class="cpcard-price">$215</span><span class="cpcard-orig">$340</span><span class="cpcard-save">Save $125</span></div>
+        <button class="cpcard-btn track-lux">ADD TO BAG</button>
+      </div>
+
+      <div class="cpcard anim up" style="transition-delay:120ms" onclick="openProduct('clothes','Draped Silk Blouse','TOPS','./clothes6.1.webp',195,310,'LAST FEW','bdg-r')">
+        <div class="cpcard-img"><img src="./clothes6.1.webp" alt="Draped Silk Blouse"/><div class="cpcard-ov"></div><span class="cpcard-bdg bdg-r track-w">LAST FEW</span><span class="cpcard-disc track-w">-37%</span><div class="cpcard-sizes"><p class="cpcard-sizes-lbl track-lux">SELECT SIZE</p><div class="sz-row"><button class="sz-btn">XS</button><button class="sz-btn">S</button><button class="sz-btn active">M</button><button class="sz-btn">L</button></div></div><button class="cpcard-wish"><svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg></button></div>
+        <div class="cpcard-cat track-lux">TOPS</div><div class="cpcard-name">Draped Silk Blouse</div><div class="cpcard-sub">In Pearl White</div><div><span class="cpcard-stars">★★★★★</span><span class="cpcard-revs">(141)</span></div>
+        <div class="cpcard-pr" style="margin:8px 0"><span class="cpcard-price">$195</span><span class="cpcard-orig">$310</span><span class="cpcard-save">Save $115</span></div>
         <button class="cpcard-btn track-lux">ADD TO BAG</button>
       </div>
     </div>
@@ -689,16 +842,89 @@ footer{background:var(--charcoal);color:rgba(255,255,255,.4);padding:52px 40px 2
   </div>
 </div>
 
-<!-- FOOTER (shared) -->
-<footer>
-  <div class="ft-in">
-    <div class="ft-grid">
-      <div><div class="ft-logo">CHMICHA<span>.</span></div><div class="ft-sub track-lux">PARIS · LUXE FASHION</div><p class="ft-tag">Curating the world's finest fashion for those who believe style is a form of self-expression.</p><p class="ft-nl-lbl track-lux">JOIN THE INNER CIRCLE</p><div class="ft-nl"><input type="email" placeholder="your@email.com"/><button class="track-lux">JOIN</button></div><div class="ft-soc"><a href="#" class="track-w">INSTAGRAM</a><a href="#" class="track-w">PINTEREST</a><a href="#" class="track-w">TIKTOK</a></div></div>
-      <div class="ft-col"><h4>CUSTOMER CARE</h4><a href="#">Contact Us</a><a href="#">Track My Order</a><a href="#">Returns</a><a href="#">Size Guide</a><a href="#">FAQ</a></div>
-      <div class="ft-col"><h4>OUR WORLD</h4><a href="#">About Chmicha</a><a href="#">Designers</a><a href="#">Sustainability</a><a href="#">Careers</a><a href="#">Press</a></div>
-      <div class="ft-col"><h4>LEGAL</h4><a href="#">Privacy Policy</a><a href="#">Terms of Service</a><a href="#">Cookie Settings</a></div>
+<!-- ═══ GAMING PAGE (dark / gold) ═══ -->
+<div id="page-gaming" class="page">
+  <section class="gaming-sec" id="gaming-section">
+    <div class="gaming-hero">
+      <p class="g-ey track-lux">CHMICHA · WEB3 HUB</p>
+      <h1 class="g-title">Gaming <em>Universe</em></h1>
+      <p class="g-lead">Elite gear for the modern player — consoles, rigs, and setups curated to the same luxury standard as our fashion house.</p>
     </div>
-    <div class="ft-bot"><p class="ft-copy">© 2026 Chmicha. All rights reserved.</p><div class="ft-pay"><span>VISA</span><span>MASTERCARD</span><span>AMEX</span><span>APPLE PAY</span><span>PAYPAL</span></div></div>
+    <!-- Product grid is generated from the GAMING_PRODUCTS array (reusable card) -->
+    <div class="g-grid" id="gamingGrid"></div>
+    <div class="cp-back" style="margin-top:40px"><button onclick="showPage('home')"><svg style="width:13px;height:13px;stroke:#9A988F;stroke-width:2;fill:none;display:inline;vertical-align:middle;margin-right:6px" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 16l-4-4m0 0l4-4m-4 4h18"/></svg>BACK TO HOME</button></div>
+  </section>
+</div>
+
+<!-- ═══ SPORT PAGE (dark / gold — same component as Gaming) ═══ -->
+<div id="page-sport" class="page">
+  <section class="gaming-sec" id="sport-section">
+    <div class="gaming-hero">
+      <p class="g-ey track-lux">CHMICHA · WEB3 HUB</p>
+      <h1 class="g-title">Sport <em>Universe</em></h1>
+      <p class="g-lead">Performance gear engineered for champions — training sets, court essentials, and recovery, curated to the CHMICHA luxury standard.</p>
+    </div>
+    <div class="g-grid" id="sportGrid"></div>
+    <div class="cp-back" style="margin-top:40px"><button onclick="showPage('home')"><svg style="width:13px;height:13px;stroke:#9A988F;stroke-width:2;fill:none;display:inline;vertical-align:middle;margin-right:6px" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 16l-4-4m0 0l4-4m-4 4h18"/></svg>BACK TO HOME</button></div>
+  </section>
+</div>
+
+<!-- ═══ SNEAKERS PAGE (same component as Gaming/Sport) ═══ -->
+<div id="page-sneakers" class="page">
+  <section class="gaming-sec" id="sneakers-section">
+    <div class="gaming-hero">
+      <p class="g-ey track-lux">CHMICHA · WEB3 HUB</p>
+      <h1 class="g-title">Sneakers <em>Universe</em></h1>
+      <p class="g-lead">Hand-finished moccasins and sculpted sneakers — where atelier craftsmanship meets the street, from €245.</p>
+    </div>
+    <div class="g-grid" id="sneakersGrid"></div>
+    <div class="cp-back" style="margin-top:40px"><button onclick="showPage('home')"><svg style="width:13px;height:13px;stroke:#9A988F;stroke-width:2;fill:none;display:inline;vertical-align:middle;margin-right:6px" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 16l-4-4m0 0l4-4m-4 4h18"/></svg>BACK TO HOME</button></div>
+  </section>
+</div>
+
+<!-- ═══ GAMING PRODUCT DETAIL PAGE (dark / gold template) ═══ -->
+<div id="page-gaming-product" class="page">
+  <section class="gp-sec" id="product-page">
+    <div class="gp-bc">
+      <button onclick="showPage('home')">Home</button><span>›</span>
+      <button id="gpSectionBtn" onclick="showPage('gaming')">Gaming</button><span>›</span>
+      <span class="cur" id="gpCrumb">Product</span>
+    </div>
+    <div class="gp-wrap">
+      <!-- gallery -->
+      <div class="gp-gallery">
+        <div class="gp-main"><img id="gpMain" src="" alt=""/><span class="gp-tag track-w" id="gpTag"></span></div>
+        <div class="gp-thumbs" id="gpThumbs"></div>
+      </div>
+      <!-- details -->
+      <div class="gp-info">
+        <div class="gp-cat track-lux" id="gpCat"></div>
+        <h1 class="gp-name" id="gpName"></h1>
+        <div class="gp-rating"><span class="gp-stars">★★★★★</span><span class="gp-revs" id="gpRevs">(128 reviews)</span></div>
+        <div class="gp-price"><span class="now" id="gpPrice"></span><span class="was" id="gpWas"></span><span class="off" id="gpOff"></span></div>
+        <p class="gp-desc" id="gpDesc"></p>
+        <div class="gp-specs-h track-lux">PRO-GAMING SPECIFICATIONS</div>
+        <ul class="gp-specs" id="gpSpecs"></ul>
+        <div class="gp-buy">
+          <div class="gp-qty"><button onclick="gpQty(-1)" aria-label="Decrease quantity">−</button><span id="gpQtyVal">1</span><button onclick="gpQty(1)" aria-label="Increase quantity">+</button></div>
+          <button class="gp-add" id="gpAdd">ADD TO BAG — €<span id="gpAddTotal"></span></button>
+        </div>
+        <div class="gp-trust">
+          <span>✦ Free express shipping</span><span>✦ 2-year warranty</span><span>✦ 30-day returns</span>
+        </div>
+      </div>
+    </div>
+    <div class="cp-back" style="margin-top:48px"><button id="gpBackBtn" onclick="showPage('gaming')"><svg style="width:13px;height:13px;stroke:#9A988F;stroke-width:2;fill:none;display:inline;vertical-align:middle;margin-right:6px" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 16l-4-4m0 0l4-4m-4 4h18"/></svg><span class="gp-back-lbl">BACK TO GAMING</span></button></div>
+  </section>
+</div>
+
+<!-- MINIMAL FOOTER (shared) -->
+<footer class="ft-min">
+  <div class="ft-min-in">
+    <div class="ft-min-logo">CHMICHA<span>.</span></div>
+    <div class="ft-min-sub track-lux">PARIS · LUXE FASHION</div>
+    <div class="ft-min-line"></div>
+    <p class="ft-min-copy">© 2026 Chmicha. All rights reserved.</p>
   </div>
 </footer>
 
@@ -717,8 +943,11 @@ footer{background:var(--charcoal);color:rgba(255,255,255,.4);padding:52px 40px 2
     </div>
     <button class="pd-close" onclick="closePD()" aria-label="Close product view"><svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
     <div class="pd-img" id="pd-img-wrap">
-      <img id="pd-img" src="" alt="" style="min-height:400px"/>
-      <span id="pd-bdg" class="pd-bdg bdg-e track-w"></span>
+      <div class="pd-main">
+        <img id="pd-img" src="" alt=""/>
+        <span id="pd-bdg" class="pd-bdg bdg-e track-w"></span>
+      </div>
+      <div class="pd-thumbs" id="pd-thumbs"></div>
     </div>
     <div class="pd-info">
       <p class="pd-ey track-lux">CHMICHA · EXCLUSIVE</p>
@@ -754,15 +983,190 @@ footer{background:var(--charcoal);color:rgba(255,255,255,.4);padding:52px 40px 2
 <script>
 /* TIMER */
 function pad(n){return String(n).padStart(2,'0')}
-function tick(){const now=new Date(),mid=new Date(now);mid.setHours(23,59,59,0);const s=Math.max(0,Math.floor((mid-now)/1000));document.getElementById('hh').textContent=pad(Math.floor(s/3600));document.getElementById('mm').textContent=pad(Math.floor((s%3600)/60));document.getElementById('ss').textContent=pad(s%60)}
+function tick(){const hh=document.getElementById('hh');if(!hh)return;const now=new Date(),mid=new Date(now);mid.setHours(23,59,59,0);const s=Math.max(0,Math.floor((mid-now)/1000));hh.textContent=pad(Math.floor(s/3600));document.getElementById('mm').textContent=pad(Math.floor((s%3600)/60));document.getElementById('ss').textContent=pad(s%60)}
 tick();setInterval(tick,1000);
 
 /* GLASSMORPHISM NAV */
 const navbar=document.getElementById('navbar'),announce=document.getElementById('announce');
-window.addEventListener('scroll',()=>{const s=window.scrollY>40;navbar.className=s?'glass':'solid';announce.className=s?'hidden':''},{ passive:true });
+window.addEventListener('scroll',()=>{const s=window.scrollY>40;navbar.className=s?'glass':'solid';},{ passive:true });
 
 /* PAGE ROUTING */
+/* ════════════════════════════════════════════════════════════════════
+   GAMING PRODUCTS  —  data-driven, reusable Product Card.
+   ▸ ADD a product: append an object below (icon = key in GAME_ICONS, or
+     set image:'./yourfile.webp' to use a real photo instead of the icon).
+   The grid renders itself from this array — duplicate a line and you're done.
+   ════════════════════════════════════════════════════════════════════ */
+const GAME_ICONS = {
+  mouse:   '<path d="M12 3a5 5 0 015 5v8a5 5 0 01-10 0V8a5 5 0 015-5zM12 3v6"/>',
+  console: '<path d="M7 9h10a4 4 0 014 4v0a3 3 0 01-5.4 1.8L14 13H10l-1.6 1.8A3 3 0 013 13v0a4 4 0 014-4z"/><path d="M8 11v2M7 12h2M15.5 11.5v.01M17 13v.01"/>',
+  chair:   '<path d="M7 4h7a2 2 0 012 2v6H7zM7 12h9M9 12v4m5-4v4M8 20h8M10 16l-1 4m6-4l1 4"/>',
+  tv:      '<path d="M3 5h18v12H3zM8 21h8M12 17v4"/>',
+  pc:      '<path d="M6 3h9l3 3v15H6zM15 3v3h3M9 9h6M9 13h6M9 17h4"/>',
+  headset: '<path d="M4 13v-1a8 8 0 0116 0v1M4 13a2 2 0 002 2h1v-4H6a2 2 0 00-2 2zM20 13a2 2 0 00-2-2h-1v4h1a2 2 0 002-2z"/>',
+};
+
+/* ▼▼▼  EDIT / EXTEND THIS LIST  ▼▼▼
+   slug    = SEO-friendly URL segment → /product/<slug>
+   gallery = all photos from the asset folder (first one is the card image)
+   Duplicate a line to add more products. */
+const GAMING_PRODUCTS = [
+  { slug:'mechanical-pro-keyboard', cat:'PERIPHERALS', name:'Mechanical Pro Keyboard', tag:'NEW IN', price:159, was:219,
+    desc:'Hot-swap optical switches · per-key RGB · 8000Hz polling.',
+    gallery:['./gaming_keyboard/gaming_keyboard_1.webp','./gaming_keyboard/gaming_keyboard_2.webp'] },
+  { slug:'8k-precision-gaming-mouse', cat:'PERIPHERALS', name:'8K Precision Gaming Mouse', tag:'BESTSELLER', price:99, was:139,
+    desc:'42K DPI sensor · 8000Hz wireless · 58g ultralight shell.',
+    gallery:['./gaming_mouse_8k_webp/gaming_mouse_1_8k.webp','./gaming_mouse_8k_webp/gaming_mouse_2_8k.webp','./gaming_mouse_8k_webp/gaming_mouse_3_8k.webp'] },
+  { slug:'apex-tower-model-ii', cat:'RIGS', name:'Apex Tower — Model II', tag:'HANDBUILT', price:2290, was:2890,
+    desc:'RTX-class GPU · 360mm liquid cooling · 240Hz-ready build.',
+    gallery:['./gaming_pc_model_2/gaming_pc_model_2_showcase.webp','./gaming_pc_model_2/gaming_pc_model_2_front_view.webp','./gaming_pc_model_2/gaming_pc_model_2_side_view.webp','./gaming_pc_model_2/gaming_pc_model_2_back_view.webp','./gaming_pc_model_2/gaming_pc_model_2_setup_view.webp'] },
+  { slug:'apex-pro-rig', cat:'RIGS', name:'Apex Pro Rig', tag:'FLAGSHIP', price:2690, was:3290,
+    desc:'Overclocked CPU · 32GB DDR5 · tempered-glass RGB tower.',
+    gallery:['./gaming_pc_product/gaming_pc_product_showcase.webp','./gaming_pc_product/gaming_pc_front_view.webp','./gaming_pc_product/gaming_pc_angle_view.webp','./gaming_pc_product/gaming_pc_back_view.webp'] },
+  { slug:'ultra-4k-gaming-monitor', cat:'DISPLAYS', name:'Ultra 4K Gaming Monitor', tag:'LIMITED', price:790, was:1090,
+    desc:'240Hz · 0.1ms · HDR1000 · G-Sync esports panel.',
+    gallery:['./gaming_monitor/gaming_monitor_1.webp','./gaming_monitor/gaming_monitor_2.webp','./gaming_monitor/gaming_monitor_3.webp'] },
+  { slug:'throne-gaming-chair-azure', cat:'SEATING', name:'Throne Gaming Chair — Azure', tag:'NEW IN', price:369, was:519,
+    desc:'4D armrests · magnetic lumbar · cold-cure foam.',
+    gallery:['./gaming_chair_blue/gaming_chair_blue_1.webp','./gaming_chair_blue/gaming_chair_blue_2.webp','./gaming_chair_blue/gaming_chair_blue_3.webp'] },
+  { slug:'throne-gaming-chair-noir', cat:'SEATING', name:'Throne Gaming Chair — Noir', tag:'BESTSELLER', price:349, was:499,
+    desc:'Italian leatherette · 165° recline · memory headrest.',
+    gallery:['./gaming_chair/gaming_chair_1.webp','./gaming_chair/gaming_chair_2.webp','./gaming_chair/gaming_chair_3.webp'] },
+  { slug:'playstation-5-elite-bundle', cat:'CONSOLES', name:'PlayStation 5 — Elite Bundle', tag:'FLAGSHIP', price:699, was:849,
+    desc:'2TB SSD · 8K-ready · dual DualSense · 3 elite titles.',
+    gallery:['./ps5_extra_8k_webp/ps5_extra_1_8k.webp','./ps5_extra_8k_webp/ps5_extra_2_8k.webp','./ps5_extra_8k_webp/ps5_extra_3_8k.webp'] },
+];
+GAMING_PRODUCTS.forEach(p=>{ p.section='gaming'; p.image = p.gallery[0]; });   // card uses the first photo
+/* ▲▲▲  EDIT / EXTEND THIS LIST  ▲▲▲ */
+
+/* ▼▼▼  SPORT PRODUCTS — same card component, same data shape  ▼▼▼ */
+const SPORT_PRODUCTS = [
+  { slug:'football-training-set', cat:'FOOTBALL', name:'Pro Football Training Set', tag:'BESTSELLER', price:129, was:189,
+    desc:'Agility cones · weighted match ball · pro field markers.',
+    gallery:['./football_training_set_v2/football_training_set_view_1.webp','./football_training_set_v2/football_training_set_view_2.webp','./football_training_set_v2/football_training_set_view_3.webp'] },
+  { slug:'swimming-goggles-set', cat:'SWIMMING', name:'Hydro Pro Swimming Set', tag:'NEW IN', price:59, was:89,
+    desc:'Anti-fog mirrored lenses · UV shield · racing strap.',
+    gallery:['./swimming_goggles_set/swimming_set_main_view.webp','./swimming_goggles_set/swimming_set_angle_view_1.webp','./swimming_goggles_set/swimming_set_angle_view_2.webp'] },
+  { slug:'court-master-basketball-set', cat:'BASKETBALL', name:'Court Master Basketball Set', tag:'LIMITED', price:79, was:119,
+    desc:'Indoor/outdoor grip · pro bounce · steel-rim hoop.',
+    gallery:['./basketball_set/basketball_main_view.webp','./basketball_set/basketball_angle_view_1.webp','./basketball_set/basketball_angle_view_2.webp'] },
+  { slug:'elite-resistance-bands-set', cat:'TRAINING', name:'Elite Resistance Bands Set', tag:'BESTSELLER', price:39, was:65,
+    desc:'Five tension levels · anti-snap latex · door anchor kit.',
+    gallery:['./resistance_bands_set/resistance_bands_main_view.webp','./resistance_bands_set/resistance_bands_angle_view_1.webp','./resistance_bands_set/resistance_bands_angle_view_2.webp','./resistance_bands_set/resistance_bands_angle_view_3.webp'] },
+  { slug:'thermo-sport-water-bottle', cat:'HYDRATION', name:'Thermo Sport Water Bottle', tag:'NEW IN', price:29, was:45,
+    desc:'Insulated 24h cold · leak-proof seal · matte alloy body.',
+    gallery:['./sport_water_bottle/main_product_view.webp','./sport_water_bottle/angled_product_view.webp','./sport_water_bottle/lifestyle_gym_view.webp'] },
+];
+SPORT_PRODUCTS.forEach(p=>{ p.section='sport'; p.image = p.gallery[0]; });
+/* ▲▲▲  SPORT PRODUCTS  ▲▲▲ */
+
+/* ▼▼▼  SNEAKER PRODUCTS — same card component, same data shape  ▼▼▼ */
+const SNEAKER_PRODUCTS = [
+  { slug:'mokassin-prestige', cat:'MOCCASINS', name:'Mokassin Prestige', tag:'EXCLUSIVE', price:285, was:420,
+    desc:'Hand-stitched full-grain leather · cushioned insole · gold eyelets.',
+    gallery:['./mokassin_prestige_webp_pdf_package/mokassin_prestige_angle_1.webp','./mokassin_prestige_webp_pdf_package/mokassin_prestige_angle_2.webp','./mokassin_prestige_webp_pdf_package/mokassin_prestige_angle_3.webp'] },
+  { slug:'mocassin-class', cat:'MOCCASINS', name:'Mocassin Class', tag:'NEW IN', price:245, was:360,
+    desc:'Soft suede upper · flexible sole · artisan hand-finish.',
+    gallery:['./mocassin_class_webp_pdf_package/mocassin_class_angle_1.webp','./mocassin_class_webp_pdf_package/mocassin_class_angle_2.webp','./mocassin_class_webp_pdf_package/mocassin_class_angle_3.webp'] },
+  { slug:'class-sneakers', cat:'SNEAKERS', name:'Class Sneakers', tag:'BESTSELLER', price:265, was:390,
+    desc:'Italian calfskin · memory-foam footbed · minimalist silhouette.',
+    gallery:['./class_sneakers_webp_pdf_package/class_sneakers_angle_1.webp','./class_sneakers_webp_pdf_package/class_sneakers_angle_2.webp','./class_sneakers_webp_pdf_package/class_sneakers_angle_3.webp'] },
+  { slug:'zawaya-sneakers', cat:'SNEAKERS', name:'Zawaya Sneakers', tag:'LIMITED', price:295, was:430,
+    desc:'Geometric paneling · breathable knit · signature gold heel tab.',
+    gallery:['./zawaya_sneakers_webp_pdf_package/zawaya_sneakers_angle_1.webp','./zawaya_sneakers_webp_pdf_package/zawaya_sneakers_angle_2.webp','./zawaya_sneakers_webp_pdf_package/zawaya_sneakers_angle_3.webp'] },
+  { slug:'signature-sneakers', cat:'SNEAKERS', name:'Signature Sneakers', tag:'NEW IN', price:275, was:410,
+    desc:'Premium leather mix · sculpted sole · all-day comfort.',
+    gallery:['./sneakers_webp_pdf_package/sneakers_angle_1.webp','./sneakers_webp_pdf_package/sneakers_angle_2.webp','./sneakers_webp_pdf_package/sneakers_angle_3.webp'] },
+  { slug:'atelier-runner', cat:'SNEAKERS', name:'Atelier Runner', tag:'EXCLUSIVE', price:310, was:460,
+    desc:'Three-quarter sculpted profile · lightweight · tonal stitching.',
+    gallery:['./sneakers_product_package/sneakers_front_three_quarter.webp','./sneakers_product_package/sneakers_side_profile.webp','./sneakers_product_package/sneakers_rear_three_quarter.webp'] },
+];
+SNEAKER_PRODUCTS.forEach(p=>{ p.section='sneakers'; p.image = p.gallery[0]; });
+/* ▲▲▲  SNEAKER PRODUCTS  ▲▲▲ */
+
+/* Reusable Product Card builder */
+function gamingCard(p){
+  const media = p.image
+    ? `<img src="${p.image}" alt="${p.name}" loading="lazy" decoding="async"/>`
+    : `<svg class="gcard-icon" viewBox="0 0 24 24">${GAME_ICONS[p.icon]||''}</svg>`;
+  const save = p.was ? `<span class="was">€${p.was}</span>` : '';
+  // whole card is a clickable link → SEO-friendly /product/<slug>
+  return `<a class="gcard" href="#/product/${p.slug}" onclick="openGamingProduct('${p.slug}');return false;" aria-label="${p.name}">
+    <div class="gcard-media">${media}<div class="gcard-glow"></div>${p.tag?`<span class="gcard-tag track-w">${p.tag}</span>`:''}</div>
+    <div class="gcard-body">
+      <div class="gcard-cat track-lux">${p.cat}</div>
+      <h3 class="gcard-name">${p.name}</h3>
+      <p class="gcard-desc">${p.desc}</p>
+      <div class="gcard-foot">
+        <div class="gcard-price"><span class="now">€${p.price}</span>${save}</div>
+        <button class="gcard-btn" onclick="event.stopPropagation();openGamingProduct('${p.slug}');return false;">ADD TO BAG</button>
+      </div>
+    </div>
+  </a>`;
+}
+function renderGaming(){
+  const grid=document.getElementById('gamingGrid'); if(!grid) return;
+  grid.innerHTML = GAMING_PRODUCTS.map(gamingCard).join('');
+}
+function renderSport(){
+  const grid=document.getElementById('sportGrid'); if(!grid) return;
+  grid.innerHTML = SPORT_PRODUCTS.map(gamingCard).join('');   // identical card component
+}
+function renderSneakers(){
+  const grid=document.getElementById('sneakersGrid'); if(!grid) return;
+  grid.innerHTML = SNEAKER_PRODUCTS.map(gamingCard).join('');  // identical card component
+}
+renderGaming(); renderSport(); renderSneakers();
+/* combined index so the detail page works for every section */
+function findProduct(slug){ return GAMING_PRODUCTS.concat(SPORT_PRODUCTS, SNEAKER_PRODUCTS).find(x=>x.slug===slug); }
+
+/* ── GAMING PRODUCT DETAIL PAGE ── */
+let gpCurrent=null, gpQtyVal=1;
+function openGamingProduct(slug){
+  const p=findProduct(slug); if(!p) return;
+  gpCurrent=p; gpQtyVal=1;
+  // dynamic breadcrumb + back target (Gaming or Sport)
+  const sec=p.section||'gaming', secLabel=sec.charAt(0).toUpperCase()+sec.slice(1);
+  const secBtn=document.getElementById('gpSectionBtn'), backBtn=document.getElementById('gpBackBtn');
+  secBtn.textContent=secLabel; secBtn.onclick=()=>showPage(sec);
+  backBtn.onclick=()=>showPage(sec); backBtn.querySelector('.gp-back-lbl').textContent='BACK TO '+secLabel.toUpperCase();
+  // SEO-friendly URL (shareable / indexable pattern)
+  if(location.hash!=='#/product/'+slug) history.pushState({slug},'', '#/product/'+slug);
+  document.title = p.name + ' — CHMICHA Gaming';
+  document.getElementById('gpCrumb').textContent=p.name;
+  document.getElementById('gpCat').textContent=p.cat;
+  document.getElementById('gpName').textContent=p.name;
+  document.getElementById('gpDesc').textContent=p.desc.replace(/·/g,'—')+' Engineered for competitive play and built to the CHMICHA luxury standard.';
+  document.getElementById('gpPrice').textContent='€'+p.price;
+  document.getElementById('gpWas').textContent=p.was?'€'+p.was:'';
+  document.getElementById('gpOff').textContent=p.was?('-'+Math.round((1-p.price/p.was)*100)+'%'):'';
+  document.getElementById('gpTag').textContent=p.tag||'';
+  // specs derived from the description bullets + standard luxury guarantees
+  const specs=p.desc.split('·').map(s=>s.trim()).filter(Boolean)
+    .concat(['Premium alloy build','2-year CHMICHA warranty']);
+  document.getElementById('gpSpecs').innerHTML=specs.map(s=>`<li>${s}</li>`).join('');
+  // gallery
+  const main=document.getElementById('gpMain'); main.src=p.gallery[0]; main.alt=p.name;
+  document.getElementById('gpThumbs').innerHTML=p.gallery.map((g,i)=>
+    `<button class="gp-thumb${i===0?' active':''}" onclick="gpSetMain('${g}',this)"><img src="${g}" alt="${p.name} view ${i+1}" loading="lazy"/></button>`).join('');
+  gpUpdateTotal();
+  showPage('gaming-product');
+}
+function gpSetMain(src,el){
+  document.getElementById('gpMain').src=src;
+  document.querySelectorAll('.gp-thumb').forEach(t=>t.classList.remove('active'));
+  if(el) el.classList.add('active');
+}
+function gpQty(d){ gpQtyVal=Math.max(1,gpQtyVal+d); document.getElementById('gpQtyVal').textContent=gpQtyVal; gpUpdateTotal(); }
+function gpUpdateTotal(){ if(gpCurrent) document.getElementById('gpAddTotal').textContent=(gpCurrent.price*gpQtyVal); }
+
+/* hamburger menu (header is hidden until opened) */
+function toggleMenu(){
+  const open=document.body.classList.toggle('menu-open');
+  document.getElementById('menuToggle').setAttribute('aria-label',open?'Close menu':'Open menu');
+}
 function showPage(id){
+  document.body.classList.remove('menu-open');   // close menu on navigation
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
   window.scrollTo({top:0,behavior:'smooth'});
@@ -786,8 +1190,7 @@ let pdQtyVal=1;
 const SIZES={clothes:['XS','S','M','L','XL'],accessories:['One Size'],shoes:['36','37','38','39','40','41']};
 function openProduct(cat,name,catLabel,img,price,orig,tag,badgeCls){
   pdQtyVal=1;document.getElementById('pd-qty').textContent=1;
-  document.getElementById('pd-img').src=img;
-  document.getElementById('pd-img').alt=name;
+  buildGallery(img, name);
   document.getElementById('pd-name').textContent=name;
   document.getElementById('pd-sub').textContent=catLabel;
   // breadcrumb: Home › Category › Product
@@ -815,6 +1218,48 @@ function openProduct(cat,name,catLabel,img,price,orig,tag,badgeCls){
 }
 function closePD(){document.getElementById('pd-modal').classList.remove('open');document.body.style.overflow='';}
 function pdGoHome(){closePD();showPage('home');}
+
+/* ── PRODUCT IMAGE GALLERY ──
+   Convention: a product whose image is "./clothes1.webp" gets a gallery of
+   ./clothes1.1.webp (main) · ./clothes1.2.webp · ./clothes1.3.webp (thumbs).
+   Missing files degrade gracefully: bad thumbs auto-remove, and the main
+   image falls back to the original single image if the .1 variant is absent. */
+function buildGallery(img, name){
+  // strip optional ".N" variant + extension → base. Handles both
+  // "./clothes1.webp" and "./clothes3.1.webp" → "./clothes1" / "./clothes3"
+  const base = img.replace(/(\.\d+)?\.webp$/i, '');
+  const gallery = [base+'.1.webp', base+'.2.webp', base+'.3.webp'];
+  const main = document.getElementById('pd-img');
+  const strip = document.getElementById('pd-thumbs');
+
+  // main image — try the official .1 variant, fall back to the base image
+  main.alt = name;
+  main.onerror = () => { main.onerror = null; main.src = img; };
+  main.src = gallery[0];
+
+  // thumbnails — build dynamically; any that 404 quietly remove themselves
+  strip.innerHTML = '';
+  gallery.forEach((src, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'pd-thumb' + (i === 0 ? ' active' : '');
+    btn.setAttribute('aria-label', name + ' view ' + (i + 1));
+    const im = document.createElement('img');
+    im.src = src; im.alt = name + ' view ' + (i + 1);
+    im.onerror = () => btn.remove();                  // hide missing variant
+    btn.appendChild(im);
+    btn.onclick = () => pdSetMain(src, btn);
+    strip.appendChild(btn);
+  });
+}
+
+/* swap main image when a thumbnail is clicked */
+function pdSetMain(src, el){
+  const main = document.getElementById('pd-img');
+  main.onerror = null;                                // clicked thumb is known-good
+  main.src = src;
+  document.querySelectorAll('.pd-thumb').forEach(t => t.classList.remove('active'));
+  if (el) el.classList.add('active');
+}
 function pdQty(d){pdQtyVal=Math.max(1,pdQtyVal+d);document.getElementById('pd-qty').textContent=pdQtyVal;}
 
 /* SIZE BUTTONS in category page */
@@ -832,6 +1277,168 @@ const observer=new IntersectionObserver(entries=>{
   entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target)}});
 },{threshold:.08});
 document.querySelectorAll('.anim').forEach(el=>observer.observe(el));
+
+/* ── INTERACTIVE MULTI-LAYER PARALLAX HERO ──
+   Desktop: mouse · Mobile: gyroscope. Each [data-depth] layer shifts by a
+   different amount → true 3D depth. Smooth via rAF lerp; GPU via will-change. */
+(function(){
+  const scene=document.getElementById('scene'),card=document.getElementById('card'),
+    media=document.getElementById('media'),img=document.getElementById('heroImg'),
+    sheen=document.getElementById('sheen'),motionBtn=document.getElementById('motionBtn');
+  if(!scene)return;
+  const layers=[...scene.querySelectorAll('[data-depth]')].map(el=>({el,d:parseFloat(el.dataset.depth)||0}));
+  const MAX=11,ZOOM=1.1;                 // tilt degrees · image zoom
+  let cur={rx:0,ry:0,z:1.06},tgt={rx:0,ry:0,z:1.06};
+  const lerp=(a,b,n)=>a+(b-a)*n;
+
+  (function frame(){
+    cur.rx=lerp(cur.rx,tgt.rx,0.08);cur.ry=lerp(cur.ry,tgt.ry,0.08);cur.z=lerp(cur.z,tgt.z,0.08);
+    // NO card rotation at full-bleed (would expose black corners). Translate-only
+    // parallax: bg shifts a little (within its scale buffer), overlays shift more → depth.
+    for(const {el,d} of layers){
+      const tx=-cur.ry*d, ty=cur.rx*d;
+      el.style.transform = el===img
+        ? `scale(${cur.z}) translate(${tx*0.4}%,${ty*0.4}%)`   // small, stays inside scale(1.06) buffer → no gaps
+        : `translate3d(${tx*2}px,${ty*2}px,0)`;
+    }
+    requestAnimationFrame(frame);
+  })();
+
+  /* lazy-load fade-in (perf) */
+  function reveal(){media.classList.add('ready');img.classList.add('loaded');}
+  if(img.complete&&img.naturalWidth)reveal();else img.addEventListener('load',reveal,{once:true});
+  img.addEventListener('error',()=>{media.style.background='linear-gradient(135deg,#1a1a22,#101015)';media.classList.add('ready');});
+
+  /* desktop: mouse */
+  scene.addEventListener('mousemove',e=>{
+    const r=scene.getBoundingClientRect(),px=(e.clientX-r.left)/r.width,py=(e.clientY-r.top)/r.height;
+    tgt.ry=(px-0.5)*MAX*2;tgt.rx=-(py-0.5)*MAX*2;tgt.z=ZOOM;
+    sheen.style.setProperty('--mx',(px*100)+'%');sheen.style.setProperty('--my',(py*100)+'%');
+  });
+  scene.addEventListener('mouseleave',()=>{tgt.rx=0;tgt.ry=0;tgt.z=1.06;});
+
+  /* mobile: gyroscope */
+  function onTilt(ev){
+    const g=Math.max(-45,Math.min(45,ev.gamma||0)),b=Math.max(-45,Math.min(45,(ev.beta||0)-35));
+    tgt.ry=(g/45)*MAX;tgt.rx=-(b/45)*MAX;tgt.z=ZOOM;
+  }
+  function enableTilt(){window.addEventListener('deviceorientation',onTilt,true);motionBtn.style.display='none';}
+  if(typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function'){
+    motionBtn.style.display='block';
+    motionBtn.addEventListener('click',()=>{DeviceOrientationEvent.requestPermission().then(s=>{if(s==='granted')enableTilt();}).catch(()=>{});});
+  }else if(window.DeviceOrientationEvent&&'ontouchstart'in window){enableTilt();}
+
+  /* respect reduced-motion */
+  if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches){
+    scene.onmousemove=null;
+  }
+})();
+
+/* ════════════════════════════════════════════════════════════════════
+   INTERACTIVE CATEGORY HUB  —  clickable hotspots over the baked artwork.
+
+   The category icons + connecting lines live inside the hero IMAGE
+   (web3-pc.webp / web3.webp). We overlay a transparent, clickable
+   hotspot on top of each one — hover = glow + scale + price; GSAP
+   pulses the rings so the network feels alive.
+
+   ▸ EACH NODE IS ITS OWN COMPONENT (one <button> per entry below).
+   ▸ ADD / EDIT a category: add an object here. Tune d{x,y} (desktop)
+     and m{x,y} (mobile) — they are % of the image — so the hotspot
+     sits exactly over the artwork node. Set active:false to disable.
+   ════════════════════════════════════════════════════════════════════ */
+/* ▼▼▼  EDIT THIS LIST  ▼▼▼   (d = desktop coords · m = mobile coords, in %) */
+const HOTSPOTS = [
+  { id:'fashion',     label:'Fashion',     page:'clothes',     price:'FROM €285',   active:true, d:{x:31,y:12}, m:{x:50,y:13} },
+  { id:'gaming',      label:'Gaming',      page:'gaming',      price:'EXPLORE',     active:true, d:{x:64,y:13}, m:{x:50,y:30} },
+  { id:'chemise',     label:'Chemise',     page:'clothes',     price:'FROM €195',   active:true, d:{x:19,y:42}, m:{x:21,y:50} },
+  { id:'sport',       label:'Sport',       page:'sport',       price:'EXPLORE',     active:true, d:{x:76,y:42}, m:{x:79,y:50} },
+  { id:'accessories', label:'Accessories', page:'accessories', price:'FROM €195',   active:true, d:{x:31,y:80}, m:{x:30,y:72} },
+  { id:'sneakers',    label:'Sneakers',    page:'sneakers',    price:'FROM €245',   active:true, d:{x:64,y:80}, m:{x:70,y:87} },
+  /* e.g. { id:'beauty', label:'Beauty', page:null, price:'COMING SOON', active:true, d:{x:50,y:50}, m:{x:50,y:50} }, */
+];
+/* ▲▲▲  EDIT THIS LIST  ▲▲▲ */
+
+(function buildHub(){
+  const hub=document.getElementById('hub'); if(!hub) return;
+  let pulseTween=null;
+
+  function render(){
+    const desktop=window.matchMedia('(min-width:769px)').matches;
+    const size=desktop?11:17;                 // hotspot diameter (% of image width)
+    hub.innerHTML='';
+    HOTSPOTS.filter(c=>c.active).forEach(c=>{
+      const p=desktop?c.d:c.m;
+      const b=document.createElement('button');
+      b.className='hotspot';
+      b.style.left=p.x+'%'; b.style.top=p.y+'%'; b.style.width=size+'%';
+      b.setAttribute('aria-label', c.label + (c.page ? '' : ' — coming soon'));
+      b.innerHTML=`<span class="pulse"></span><span class="ring"></span>`
+                + `<span class="price">${c.price}</span><span class="sr">${c.label}</span>`;
+      if(c.page) b.addEventListener('click',()=>showPage(c.page));
+      hub.appendChild(b);
+    });
+    startPulse();
+  }
+
+  /* GSAP: gently pulse the rings → "living network" effect */
+  function startPulse(){
+    if(typeof gsap==='undefined') return;
+    if(pulseTween) pulseTween.kill();
+    gsap.set('.hotspot .pulse',{scale:1,opacity:.5});
+    pulseTween=gsap.to('.hotspot .pulse',{
+      scale:1.25,opacity:0,duration:1.9,ease:'sine.out',repeat:-1,
+      stagger:{each:0.22,from:'random'}
+    });
+  }
+
+  render();
+  let t; window.addEventListener('resize',()=>{clearTimeout(t);t=setTimeout(render,200);}); // re-place on breakpoint change
+})();
+
+/* ── GSAP ScrollTrigger: reveal hero content on scroll ── */
+(function(){
+  // Only hide+animate if GSAP actually loaded — otherwise content stays visible (fallback)
+  if(typeof gsap==='undefined'||typeof ScrollTrigger==='undefined') return;
+  gsap.registerPlugin(ScrollTrigger);
+  document.body.classList.add('gsap-ready');   // activates the .reveal hidden state
+
+  /* cinematic TEXT ASSEMBLY: three lines glide in from alternating sides and
+     converge at center — WELCOME TO (right) · CHMICHA (left) · UNIVERSE (right).
+     Synchronized so they arrive almost simultaneously. Runs after image load. */
+  const hImg=document.getElementById('heroImg');
+  const mobile=window.matchMedia('(max-width:768px)').matches;
+  function welcomeIn(){
+    const dx   = mobile ? 130 : 260;   // travel distance (smaller on mobile)
+    const dur  = mobile ? 1.2 : 1.6;   // slower, premium on desktop
+    const ease = 'power3.out';         // decelerate into final position
+    gsap.set('#heroWelcome',{ opacity:1 });
+    // started together (position 0) → converge at the same moment
+    const tl=gsap.timeline({ delay:0.25 });
+    tl.fromTo('#heroWelcome .hw-top',{ x: dx,        opacity:0 },{ x:0, opacity:1, duration:dur, ease }, 0)
+      .fromTo('#heroWelcome .hw-c',  { x:-dx*1.15,   opacity:0 },{ x:0, opacity:1, duration:dur, ease }, 0)
+      .fromTo('#heroWelcome .hw-u',  { x: dx,        opacity:0 },{ x:0, opacity:1, duration:dur, ease }, 0);
+  }
+  if(hImg && hImg.complete && hImg.naturalWidth) welcomeIn();
+  else if(hImg) hImg.addEventListener('load', welcomeIn, { once:true });
+  else welcomeIn();
+
+  gsap.to('.hero-content .reveal',{
+    opacity:1, y:0, duration:0.9, ease:'power3.out', stagger:0.12,
+    scrollTrigger:{
+      trigger:'#heroContent',
+      start:'top 78%',      // begin as the content nears the viewport
+      once:true             // play once, then stay
+    }
+  });
+
+  // subtle parallax drift of the hero image as you scroll past it
+  // (target #scene — #card is driven every frame by the tilt loop)
+  gsap.to('#scene',{
+    yPercent:-10, ease:'none',
+    scrollTrigger:{ trigger:'#hero', start:'top top', end:'bottom top', scrub:true }
+  });
+})();
 </script>
 </body>
 </html>
