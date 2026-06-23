@@ -266,8 +266,9 @@ body.menu-open #siteHeader{transform:translateY(0)}
 @media(max-width:768px){
   .hero{height:100vh;min-height:0}
   .scene{position:absolute;left:0;top:0;transform:none;width:100vw;height:100vh;max-width:100vw;margin:0}
-  .media img{object-fit:cover!important;transform:scale(1)!important}
+  .media img{object-fit:cover!important;transform:scale(1)!important;opacity:1!important}  /* always visible — don't rely on the JS fade-in */
   .media{background:#0f0f0f}
+  .media::before{display:none!important}     /* hide the loading shimmer */
   .scroll-cue{display:none}
   /* freeze parallax layers so hotspots stay locked to the image (no gyro drift) */
   .hub,.hero-welcome-wrap,.frame,.grid-lines{transform:none!important}
