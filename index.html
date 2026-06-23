@@ -258,22 +258,21 @@ body.menu-open #siteHeader{transform:translateY(0)}
 @media(min-width:769px){
   .scene{width:max(100vw, calc(100vh * 1893/831));height:max(100vh, calc(100vw * 831/1893))}
 }
-/* ── MOBILE (≤768px): square map (web3.webp) fills the FULL WIDTH with no zoom,
-   no crop, no lost detail. The hero is sized to the map (no 100vh black bars),
-   so it reads as a full-screen gateway. Hotspots stay locked to the icons. */
+/* ── MOBILE (≤768px): PORTRAIT map (web3_mobile_1080x1920.webp) fills the FULL
+   screen — its 9:16 shape matches the phone, so no zoom, no crop, no black bars. */
 @media(max-width:768px){
-  .hero{height:auto;min-height:0}                       /* hero = map height → kills the empty space */
-  .scene{position:relative;left:auto;top:auto;transform:none;width:100vw;height:100vw;max-width:100vw;margin:0}
-  .media img{object-fit:contain!important;transform:scale(1)!important}  /* whole square, undistorted */
+  .hero{height:100vh;min-height:0}
+  .scene{position:absolute;left:0;top:0;transform:none;width:100vw;height:100vh;max-width:100vw;margin:0}
+  .media img{object-fit:cover!important;transform:scale(1)!important}
   .media{background:#0f0f0f}
-  .scroll-cue{display:none}                             /* not needed when the map fills the view */
+  .scroll-cue{display:none}
   /* freeze parallax layers so hotspots stay locked to the image (no gyro drift) */
   .hub,.hero-welcome-wrap,.frame,.grid-lines{transform:none!important}
   /* corner tags must never block a tap on a hotspot */
   .ph-badge,.ph-price{pointer-events:none}
+  /* ⚠ TEMP DEBUG: shows each tap-zone so we can align them. REMOVE once aligned. */
+  .hotspot{outline:2px dashed rgba(122,255,170,.95);background:rgba(122,255,170,.18)}
 }
-/* hotspot debug — uncomment to SEE the tap zones while aligning the % coords:
-@media(max-width:768px){ .hotspot{outline:2px dashed rgba(212,175,55,.85);background:rgba(212,175,55,.12)} } */
 .media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.06);opacity:0;transition:opacity 1.1s ease,transform .25s cubic-bezier(.22,1,.36,1);will-change:transform,opacity}
 .media img.loaded{opacity:1}
 .media::before{content:'';position:absolute;inset:0;background:linear-gradient(110deg,#15151b 8%,#20202a 18%,#15151b 33%);background-size:200% 100%;animation:shimmer 1.6s infinite;z-index:0}
@@ -723,7 +722,8 @@ footer{background:var(--charcoal);color:rgba(255,255,255,.4);padding:52px 40px 2
         <!-- Responsive art-direction: browser downloads ONLY the matching image.
              Desktop (≥769px) → web3-pc.webp · Mobile (≤768px) → web3.webp -->
         <picture>
-          <source srcset="./web3-pc.webp" media="(min-width:769px)"/>          <img id="heroImg" src="./web3.webp" alt="Chmicha luxury fashion editorial" decoding="async" data-depth="0.25"/>
+          <source srcset="./web3-pc.webp" media="(min-width:769px)"/>
+          <source srcset="./web3_mobile_1080x1920.webp" media="(max-width:768px)"/>          <img id="heroImg" src="./web3.webp" alt="Chmicha luxury fashion editorial" decoding="async" data-depth="0.25"/>
         </picture>
         <div class="sheen" id="sheen"></div>
         <!-- Centered welcome overlay — part of the image's 3D depth (parallax via wrapper) -->
