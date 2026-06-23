@@ -272,7 +272,13 @@ body.menu-open #siteHeader{transform:translateY(0)}
   /* freeze parallax layers so hotspots stay locked to the image (no gyro drift) */
   .hub,.hero-welcome-wrap,.frame,.grid-lines{transform:none!important}
   /* corner tags must never block a tap on a hotspot */
-  .ph-badge,.ph-price{pointer-events:none}}
+  .ph-badge,.ph-price{pointer-events:none}
+  /* cleanliness: edge-to-edge image only — no footer, no scroll, no decorations */
+  .ft-min{display:none}
+  .ph-badge,.ph-price,.scroll-cue,.hero-welcome-wrap{display:none}
+  /* elegant pulse ring on each interactive icon */
+  .hotspot .pulse{border:1.5px solid rgba(212,175,55,.7);box-shadow:0 0 14px rgba(212,175,55,.35)}
+}
 .media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.06);opacity:0;transition:opacity 1.1s ease,transform .25s cubic-bezier(.22,1,.36,1);will-change:transform,opacity}
 .media img.loaded{opacity:1}
 .media::before{content:'';position:absolute;inset:0;background:linear-gradient(110deg,#15151b 8%,#20202a 18%,#15151b 33%);background-size:200% 100%;animation:shimmer 1.6s infinite;z-index:0}
@@ -1364,13 +1370,13 @@ document.querySelectorAll('.anim').forEach(el=>observer.observe(el));
    ════════════════════════════════════════════════════════════════════ */
 /* ▼▼▼  EDIT THIS LIST  ▼▼▼   (d = desktop coords · m = mobile coords, in %) */
 const HOTSPOTS = [
-  /* m:{x,y} = % over the PORTRAIT mobile map (web3_mobile_1080x1920), aligned to icons. */
-  { id:'fashion',     label:'Fashion',     page:'clothes',     price:'FROM €285',   active:true, d:{x:31,y:12}, m:{x:26,y:35} },
-  { id:'gaming',      label:'Gaming',      page:'gaming',      price:'EXPLORE',     active:true, d:{x:64,y:13}, m:{x:74,y:35} },
-  { id:'chemise',     label:'Chemise',     page:'clothes',     price:'FROM €195',   active:true, d:{x:19,y:42}, m:{x:9,y:52} },
-  { id:'sport',       label:'Sport',       page:'sport',       price:'EXPLORE',     active:true, d:{x:76,y:42}, m:{x:91,y:52} },
-  { id:'accessories', label:'Accessories', page:'accessories', price:'FROM €195',   active:true, d:{x:31,y:80}, m:{x:24,y:64} },
-  { id:'sneakers',    label:'Sneakers',    page:'sneakers',    price:'FROM €245',   active:true, d:{x:64,y:80}, m:{x:76,y:64} },
+  /* m:{x,y} = % over the master mobile map, read from the green-circled icons. */
+  { id:'fashion',     label:'Fashion',     page:'clothes',     price:'FROM €285',   active:true, d:{x:31,y:12}, m:{x:29,y:24} },
+  { id:'gaming',      label:'Gaming',      page:'gaming',      price:'EXPLORE',     active:true, d:{x:64,y:13}, m:{x:69,y:24} },
+  { id:'chemise',     label:'Chemise',     page:'clothes',     price:'FROM €195',   active:true, d:{x:19,y:42}, m:{x:16,y:45} },
+  { id:'sport',       label:'Sport',       page:'sport',       price:'EXPLORE',     active:true, d:{x:76,y:42}, m:{x:85,y:45} },
+  { id:'accessories', label:'Accessories', page:'accessories', price:'FROM €195',   active:true, d:{x:31,y:80}, m:{x:26,y:65} },
+  { id:'sneakers',    label:'Sneakers',    page:'sneakers',    price:'FROM €245',   active:true, d:{x:64,y:80}, m:{x:71,y:65} },
   /* e.g. { id:'beauty', label:'Beauty', page:null, price:'COMING SOON', active:true, d:{x:50,y:50}, m:{x:50,y:50} }, */
 ];
 /* ▲▲▲  EDIT THIS LIST  ▲▲▲ */
@@ -1381,7 +1387,7 @@ const HOTSPOTS = [
 
   function render(){
     const desktop=window.matchMedia('(min-width:769px)').matches;
-    const size=desktop?11:17;                 // hotspot diameter (% of image width)
+    const size=desktop?11:24;                 // hotspot diameter (% of image width · bigger on mobile for easy tapping)
     hub.innerHTML='';
     HOTSPOTS.filter(c=>c.active).forEach(c=>{
       const p=desktop?c.d:c.m;
