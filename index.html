@@ -258,13 +258,15 @@ body.menu-open #siteHeader{transform:translateY(0)}
 @media(min-width:769px){
   .scene{width:max(100vw, calc(100vh * 1893/831));height:max(100vh, calc(100vw * 831/1893))}
 }
-/* ── MOBILE (≤768px): square map (web3.webp), full-width & centered, the WHOLE
-   map visible (contain). Hotspots are % of this square stage → they stay locked
-   to the icons. Parallax frozen so nothing drifts. */
+/* ── MOBILE (≤768px): square map (web3.webp) fills the FULL WIDTH with no zoom,
+   no crop, no lost detail. The hero is sized to the map (no 100vh black bars),
+   so it reads as a full-screen gateway. Hotspots stay locked to the icons. */
 @media(max-width:768px){
-  .scene{left:50%;top:50%;transform:translate(-50%,-50%);width:100vw;height:100vw;max-width:100vw}
-  .media img{object-fit:contain!important;transform:scale(1)!important}
+  .hero{height:auto;min-height:0}                       /* hero = map height → kills the empty space */
+  .scene{position:relative;left:auto;top:auto;transform:none;width:100vw;height:100vw;max-width:100vw;margin:0}
+  .media img{object-fit:contain!important;transform:scale(1)!important}  /* whole square, undistorted */
   .media{background:#0f0f0f}
+  .scroll-cue{display:none}                             /* not needed when the map fills the view */
   /* freeze parallax layers so hotspots stay locked to the image (no gyro drift) */
   .hub,.hero-welcome-wrap,.frame,.grid-lines{transform:none!important}
   /* corner tags must never block a tap on a hotspot */
